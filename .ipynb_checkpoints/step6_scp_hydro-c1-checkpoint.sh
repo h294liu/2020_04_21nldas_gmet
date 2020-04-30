@@ -12,7 +12,7 @@ if [ ! -d ${DstDir}/${ResultFolder} ]; then mkdir ${DstDir}/${ResultFolder}; fi
 FILES=( $(ls ${StnlistDir} -I *.png) )
 FILE_NUM=${#FILES[@]}
 # for i in $(seq 0 $(($FILE_NUM -1))); do
-for i in $(seq 7 7); do
+for i in $(seq 4 7); do
     
     FileName=${FILES[${i}]}
     FileNameShort="${FileName/.txt/}" # remove suffix ".txt"
