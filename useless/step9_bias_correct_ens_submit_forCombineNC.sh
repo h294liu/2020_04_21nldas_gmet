@@ -8,7 +8,7 @@ RootDir=/glade/u/home/hongli/work/2020_04_21nldas_gmet #cheyenne
 NldasDir=$RootDir/data/nldas_daily_utc
 SourceDir=$RootDir/scripts
 
-EnsDirBase=$RootDir/test_uniform
+EnsDirBase=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet/test_uniform
 if [ ! -d $EnsDirBase ]; then mkdir -p $EnsDirBase; fi
 
 startEns=1   # start number of ensembles to generate
@@ -45,8 +45,8 @@ NldasFormtFile=$OutputDir/NLDAS_${sYear}-${eYear}.formt.nc
 # loop all stnlist files
 FILES=( $(ls ${EnsDirBase}) )
 FILE_NUM=${#FILES[@]}
-#for i in $(seq 0 $(($FILE_NUM -1))); do
-for i in $(seq 0 1); do
+for i in $(seq 0 $(($FILE_NUM -1))); do
+# for i in $(seq 0 1); do
     
     CaseID=${FILES[${i}]}
     echo $CaseID
@@ -75,9 +75,10 @@ for i in $(seq 0 1); do
     echo "#PBS -N bias.$CaseID" >> $CommandFile
     echo '#PBS -A P48500028' >> $CommandFile
     echo '#PBS -q regular' >> $CommandFile
-    echo '#PBS -l walltime=01:00:00' >> $CommandFile
+    echo '#PBS -l walltime=04:00:00' >> $CommandFile
     echo '#PBS -l select=1:ncpus=1' >> $CommandFile
-    echo '#PBS -j oe' >> $CommandFile 
+    echo "#PBS -o $LogFile.o.%j" >> $CommandFile 
+    echo "#PBS -e $LogFile.e.%j" >> $CommandFile 
 
     echo 'export TMPDIR=/glade/scratch/hongli/tmp' >> $CommandFile
     echo 'mkdir -p $TMPDIR' >> $CommandFile
@@ -85,7 +86,7 @@ for i in $(seq 0 1); do
     echo "$ConfigFile" >> $CommandFile
     chmod 744 $CommandFile 
     
-    #qsub $CommandFile
+    qsub $CommandFile
 
 done
 
