@@ -10,7 +10,7 @@ EnsDirBase=$RootDir/test_uniform
 Template=$RootDir/scripts/config/biascorrect.TEMPLATE.sh
 
 startEns=1   # start number of ensembles to generate
-stopEns=3 #100  # stop number of ensembles to generate
+stopEns=100  # stop number of ensembles to generate
 numEns=$(($stopEns - $startEns +1))
 
 sYear=2015 
@@ -20,8 +20,8 @@ eYear=2016
 # loop all stnlist files
 FILES=( $(ls ${EnsDirBase}) )
 FILE_NUM=${#FILES[@]}
-# for i in $(seq 0 $(($FILE_NUM -1))); do
-for i in $(seq 6 7); do
+for i in $(seq 0 $(($FILE_NUM -1))); do
+# for i in $(seq 6 7); do
     
     CaseID=${FILES[${i}]}
     echo $CaseID
@@ -52,10 +52,10 @@ for i in $(seq 6 7); do
         echo "#PBS -N bias.$CaseID" >> $CommandFile
         echo '#PBS -A P48500028' >> $CommandFile
         echo '#PBS -q regular' >> $CommandFile
-        echo '#PBS -l walltime=04:00:00' >> $CommandFile
+        echo '#PBS -l walltime=12:00:00' >> $CommandFile
         echo '#PBS -l select=1:ncpus=1' >> $CommandFile
-        echo "#PBS -o $LogFile.o.%j" >> $CommandFile 
-        echo "#PBS -e $LogFile.e.%j" >> $CommandFile 
+        echo "#PBS -o $LogFile.o" >> $CommandFile 
+        echo "#PBS -e $LogFile.e" >> $CommandFile 
 
         echo 'export TMPDIR=/glade/scratch/hongli/tmp' >> $CommandFile
         echo 'mkdir -p $TMPDIR' >> $CommandFile
@@ -63,7 +63,7 @@ for i in $(seq 6 7); do
         echo "$ConfigFile" >> $CommandFile
         chmod 744 $CommandFile 
 
-        #qsub $CommandFile
+        qsub $CommandFile
     done
 done
 

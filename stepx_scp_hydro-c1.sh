@@ -31,13 +31,12 @@ set -e
 EnsDirBase=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet/test_uniform
 FILES=( $(ls ${EnsDirBase}) )
 FILE_NUM=${#FILES[@]}
-# for i in $(seq 0 $(($FILE_NUM -1))); do
-for i in $(seq 1 1); do
+for i in $(seq 0 $(($FILE_NUM -1))); do
+# for i in $(seq 1 1); do
     
     CaseID=${FILES[${i}]}
     echo $CaseID
-
-    rm -r $EnsDirBase/$CaseID/*combine*
+    rm -rf $EnsDirBase/$CaseID/tmp/*summary*
 done
 
 
