@@ -19,7 +19,7 @@ StartDateStn=20150101
 EndDateStn=20161231
 
 StartDateOut=20150101
-EndDateOut=20150102
+EndDateOut=20150331
 
 WorkDirBase=${RootDir}/test_uniform
 if [ ! -d ${WorkDirBase} ]; then mkdir -p ${WorkDirBase}; fi

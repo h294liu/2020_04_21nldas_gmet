@@ -36,7 +36,8 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
     
     CaseID=${FILES[${i}]}
     echo $CaseID
-    rm -rf $EnsDirBase/$CaseID/tmp/*summary*
+    rm -rf $EnsDirBase/$CaseID/tmp/*.mean.nc
+    rm -rf $EnsDirBase/$CaseID/tmp/*.bias.nc 
 done
 
 
