@@ -2,7 +2,8 @@
 set -e
 
 # H. liu, April 28, 2020.
-# Bias correct NLDAS-based GMET ensemble in comparison with NLDAS data.
+# Convert original NLDAS netcdf to the GMET output format.
+# This is for ensemble bias correction.
   
 RootDir=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet #cheyenne
 NldasDir=$RootDir/data/nldas_daily_utc

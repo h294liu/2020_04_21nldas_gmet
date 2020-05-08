@@ -8,9 +8,9 @@ set -e
 RootDir=/home/hongli/work/2020_04_21nldas_gmet
 
 SourceDir=${RootDir}/scripts
-GridInfo=${SourceDir}/conus_ens_grid_eighth_deg_v1p1.nc
-StnlistDir=${SourceDir}/step4_sample_stnlist
-StndataDir=${SourceDir}/step5_prepare_stndata
+GridInfo=${RootDir}/data/nldas_topo/conus_ens_grid_eighth.nc
+StnlistDir=${SourceDir}/step1_sample_stnlist
+StndataDir=${SourceDir}/step2_prepare_stndata
 
 Program=${RootDir}/GMET_tpl/run/downscale.exe
 Template=${SourceDir}/config/config.ens_regr.TEMPLATE.txt 
@@ -27,8 +27,9 @@ if [ ! -d ${WorkDirBase} ]; then mkdir -p ${WorkDirBase}; fi
 # loop all stnlist files
 FILES=( $(ls ${StnlistDir}) )
 FILE_NUM=${#FILES[@]}
-for i in $(seq 0 $(($FILE_NUM -1))); do
-    
+# for i in $(seq 0 $(($FILE_NUM -1))); do
+for i in $(seq 8 8); do
+
     FileName=${FILES[${i}]}
     FileNameShort="${FileName/.txt/}" # remove suffix ".txt"
     GridNum=$(echo $FileNameShort| cut -d'_' -f 2) # extract substring "012grids"    
