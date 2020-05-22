@@ -25,12 +25,13 @@ WorkDirBase=${RootDir}/test_uniform
 if [ ! -d ${WorkDirBase} ]; then mkdir -p ${WorkDirBase}; fi
 
 # loop all stnlist files
-FILES=( $(ls ${StnlistDir}) )
+FILES=( $(ls ${StnlistDir}/*.txt) )
 FILE_NUM=${#FILES[@]}
-#for i in $(seq 0 $(($FILE_NUM -1))); do
-for i in $(seq 7 7); do
-    
-    FileName=${FILES[${i}]}
+for i in $(seq 0 $(($FILE_NUM -1))); do
+# for i in $(seq 2 3); do
+
+    FileName=${FILES[${i}]} 
+    FileName=${FileName##*/} # get basename of filename
     FileNameShort="${FileName/.txt/}" # remove suffix ".txt"
     GridNum=$(echo $FileNameShort| cut -d'_' -f 2) # extract substring "012grids"    
     CaseID=${GridNum}

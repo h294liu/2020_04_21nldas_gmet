@@ -5,32 +5,35 @@ set -e
 # Run downscaling regression year by year using GMET downscaling code.
 # Reference: /home/hydrofcst/otl_support/forcings/GMET/run/run_ens_regr.csh
 
-RootDir=/home/hongli/work/2020_04_21nldas_gmet
+#------------------------------------------------------------
+# Update setup
+RootDir=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet
+SampleMode=random #uniform
 
 SourceDir=${RootDir}/scripts
-GridInfo=${RootDir}/data/nldas_topo/conus_ens_grid_eighth.nc
-StnlistDir=${SourceDir}/step1_sample_stnlist
-StndataDir=${SourceDir}/step2_prepare_stndata
-
-Program=${RootDir}/GMET_tpl/run/downscale.exe
-Template=/home/hongli/github/2020_04_21nldas_gmet/config/config.ens_regr.TEMPLATE.txt 
+StnlistDir=${SourceDir}/step1_sample_stnlist_$SampleMode
+StndataDir=${SourceDir}/step2_prepare_stndata_$SampleMode
+WorkDirBase=${RootDir}/test_$SampleMode
+if [ ! -d ${WorkDirBase} ]; then mkdir -p ${WorkDirBase}; fi
 
 StartDateStn=20150101
 EndDateStn=20161231
 
 StartDateOut=20150101
-EndDateOut=20150331
+EndDateOut=20161231
 
-WorkDirBase=${RootDir}/test_uniform
-if [ ! -d ${WorkDirBase} ]; then mkdir -p ${WorkDirBase}; fi
+Program=/glade/u/home/hongli/tools/GMET-1/downscale/downscale.exe
+Template=/glade/u/home/hongli/github/2020_04_21nldas_gmet/config/config.ens_regr.TEMPLATE.txt 
+GridInfo=${RootDir}/data/nldas_topo/conus_ens_grid_eighth.nc
 
+#------------------------------------------------------------
 # loop all stnlist files
 FILES=( $(ls ${StnlistDir}/*.txt) )
 FILE_NUM=${#FILES[@]}
 for i in $(seq 0 $(($FILE_NUM -1))); do
 # for i in $(seq 2 3); do
 
-    FileName=${FILES[${i}]}
+    FileName=${FILES[${i}]} 
     FileName=${FileName##*/} # get basename of filename
     FileNameShort="${FileName/.txt/}" # remove suffix ".txt"
     GridNum=$(echo $FileNameShort| cut -d'_' -f 2) # extract substring "012grids"    
@@ -55,7 +58,7 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
     EndMoDy='1231'
     
     # loop through years
-    for Y in $(seq ${StartYr} ${StartYr}); do
+    for Y in $(seq ${StartYr} ${EndYr}); do
         echo $Y
         if [ $Y -gt ${StartYr} ]; then 
             StMoDy='0101'
@@ -65,8 +68,8 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
         fi
         
         # configure config, output and log files
-        ConfigFile=${WorkDir}/tmp/config.ens_regr.weight
-        OutputFile=${WorkDir}/gmet_regr/regress_ts.weight.nc
+        ConfigFile=${WorkDir}/tmp/config.ens_regr.$Y
+        OutputFile=${WorkDir}/gmet_regr/regress_ts.$Y.nc
         if [ -e ${OutputFile} ]; then rm -rf ${OutputFile}; fi
         
         sed "s,RunYr,$Y,g" $Template |\
@@ -78,27 +81,32 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
         sed "s,StnDataDir,$StnDataDir,g" |\
         sed "s,StartDateStn,$StartDateStn,g" |\
         sed "s,EndDateStn,$EndDateStn,g" |\
-        sed "s,FALSE,TRUE,g" |\
         sed "s,WeightFile,$WeightFile,g" > $ConfigFile
 
         # create job submission file
-        CommandFile=${WorkDir}/tmp/sbatch.ens_regr.weight
+        CommandFile=${WorkDir}/tmp/qsub.ens_regr.$Y
         if [ -e ${command_file} ]; then rm -rf ${command_file}; fi
         
-        LogFile=${WorkDir}/tmp/log.ens_regr.weight
+        LogFile=${WorkDir}/tmp/log.ens_regr.$Y
         rm -f $LogFile.*
 
         echo '#!/bin/bash' > ${CommandFile}
-        echo "#SBATCH --job-name=weight.${CaseID}" >> ${CommandFile}
-        echo '#SBATCH --partition=main' >> ${CommandFile}
-        echo '#SBATCH --ntasks=1' >> ${CommandFile}
-        echo '#SBATCH --time=01:00:00' >> ${CommandFile}
-        echo "#SBATCH --output=${LogFile}.%j" >> ${CommandFile}
+        echo "#PBS -N regr.${CaseID}.${Y}" >> ${CommandFile}
+        echo '#PBS -A P48500028' >> ${CommandFile}
+        echo '#PBS -q regular' >> ${CommandFile}
+        echo '#PBS -l select=1:ncpus=1:mpiprocs=1' >> ${CommandFile}
+        echo '#PBS -l walltime=12:00:00' >> ${CommandFile}
+        echo "#PBS -o ${LogFile}.o" >> ${CommandFile}
+        echo "#PBS -e ${LogFile}.e" >> ${CommandFile}
+        
+        echo "mkdir -p /glade/scratch/hongli/temp" >> ${CommandFile}
+        echo "export TMPDIR=/glade/scratch/hongli/temp" >> ${CommandFile}
 
+        echo "module load gnu" >> ${CommandFile}
+        echo "module load netcdf" >> ${CommandFile}
         echo "${Program} ${ConfigFile}" >> ${CommandFile}
         chmod 740 ${CommandFile}
         
-        sbatch ${CommandFile}
-        
+        #qsub ${CommandFile}
      done
 done
