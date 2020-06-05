@@ -7,7 +7,8 @@ set -e
   
 RootDir=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet #cheyenne
 NldasDir=$RootDir/data/nldas_daily_utc
-sYear=1980 
+# sYear=1980 
+sYear=2015 
 eYear=2016
 
 NewNldasDir=$RootDir/data/nldas_daily_utc_convert
@@ -27,7 +28,7 @@ for Y in $(seq $sYear $eYear); do
     ncap2 -h -s "pcp=prcp_avg*24;t_mean=tair_avg-273.15;t_range=tair_max-tair_min" $NldasOriginFile $TmpFile
 
     # change NLDAS data's dimension names to be same as GMET output's
-    ncrename -h -d lon_110,y -d lat_110,x -v lon_110,longitude -v lat_110,latitude $TmpFile
+    ncrename -h -d lon_110,x -d lat_110,y -v lon_110,longitude -v lat_110,latitude $TmpFile
     
     # extract useful variable
     ncks -h -v pcp,t_mean,t_range,longitude,latitude,time $TmpFile $NldasNewFile

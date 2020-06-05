@@ -6,8 +6,10 @@ set -e
   
 RootDir=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet #cheyenne
 NewNldasDir=$RootDir/data/nldas_daily_utc_convert
-EnsDirBase=$RootDir/test_uniform
+EnsDirBase=$RootDir/test_uniform_perturb
 Template=$RootDir/scripts/config/biascorrect.TEMPLATE.sh
+SubstractPy=$RootDir/scripts/config/substract.py
+AdditionPy=$RootDir/scripts/config/addition.py
 
 startEns=1   # start number of ensembles to generate
 stopEns=100  # stop number of ensembles to generate
@@ -21,7 +23,7 @@ eYear=2016
 FILES=( $(ls ${EnsDirBase}) )
 FILE_NUM=${#FILES[@]}
 for i in $(seq 0 $(($FILE_NUM -1))); do
-# for i in $(seq 6 7); do
+#for i in $(seq 0 0); do
     
     CaseID=${FILES[${i}]}
     echo $CaseID
@@ -40,7 +42,9 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
         sed "s,STOPENS,$stopEns,g" |\
         sed "s,NLDASFILE,$NldasFile,g" |\
         sed "s,CASEID,$CaseID,g" |\
-        sed "s,YEAR,$Y,g" > $ConfigFile 
+        sed "s,YEAR,$Y,g" |\
+        sed "s,SUBSTRACTPy,$SubstractPy,g" |\
+        sed "s,ADDITIONPy,$AdditionPy,g" > $ConfigFile
         chmod 744 $ConfigFile
 
         # create job submission file

@@ -11,13 +11,12 @@ RootDir=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet
 SampleMode=uniform #uniform #random
 
 SourceDir=${RootDir}/scripts
-StnlistDir=${SourceDir}/step1_sample_stnlist_${SampleMode}_origin ##
-# StnlistDir=${SourceDir}/step1_sample_stnlist_${SampleMode}
-StndataDir=${SourceDir}/step2_prepare_stndata_$SampleMode
+# StnlistDir=${SourceDir}/step1_sample_stnlist_${SampleMode}_origin ##
+StnlistDir=${SourceDir}/step1_sample_stnlist_${SampleMode}_perturb
+StndataDir=${SourceDir}/step2_prepare_stndata_${SampleMode}_perturb
 # WorkDirBase=${RootDir}/test_${SampleMode}
 # WorkDirBase=${RootDir}/test_${SampleMode}_debug ##
-# WorkDirBase=${RootDir}/test_${SampleMode}_perturb ##
-WorkDirBase=${RootDir}/test_${SampleMode}_modify ##
+WorkDirBase=${RootDir}/test_${SampleMode}_perturb ##
 if [ ! -d ${WorkDirBase} ]; then mkdir -p ${WorkDirBase}; fi
 
 StartDateStn=20150101
@@ -27,8 +26,7 @@ StartDateOut=20150101
 EndDateOut=20150331
 
 # Program=/glade/u/home/hongli/tools/GMET-1/downscale/downscale_debug.exe ##
-# Program=/glade/u/home/hongli/tools/GMET-1/downscale/downscale.exe 
-Program=/glade/u/home/hongli/GMET-1/downscale/downscale_modify.exe
+Program=/glade/u/home/hongli/tools/GMET-1/SHARP/downscale/downscale.exe 
 Template=/glade/u/home/hongli/github/2020_04_21nldas_gmet/config/config.ens_regr.TEMPLATE.txt 
 GridInfo=${RootDir}/data/nldas_topo/conus_ens_grid_eighth.nc
 
@@ -36,7 +34,7 @@ GridInfo=${RootDir}/data/nldas_topo/conus_ens_grid_eighth.nc
 # loop all stnlist files
 FILES=( $(ls ${StnlistDir}/*.txt) )
 FILE_NUM=${#FILES[@]}
-for i in $(seq 0 $(($FILE_NUM -1))); do
+for i in $(seq 1 $(($FILE_NUM -1))); do
 # for i in $(seq 0 0); do
 
     FileName=${FILES[${i}]} 
@@ -74,7 +72,8 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
         fi
         
         # configure config, output and log files
-        ConfigFile=${WorkDir}/tmp/config.ens_regr.weight
+        ConfigFile=${WorkDir}/tmp/config.weight
+#         ConfigFile=${WorkDir}/tmp/config.ens_regr.weight
         OutputFile=${WorkDir}/gmet_regr/regress_ts.weight.nc
         if [ -e ${OutputFile} ]; then rm -rf ${OutputFile}; fi
         
@@ -89,6 +88,7 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
         sed "s,EndDateStn,$EndDateStn,g" |\
         sed "s,FALSE,TRUE,g" |\
         sed "s,WeightFile,$WeightFile,g" > $ConfigFile
+        chmod 740 ${ConfigFile}
 
         # create job submission file
         CommandFile=${WorkDir}/tmp/qsub.ens_regr.weight

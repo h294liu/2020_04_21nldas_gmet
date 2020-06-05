@@ -160,5 +160,7 @@ with nc.Dataset(SrcFile) as src:
         dst.variables['trange_ub'][:] = trange_ens_lb
         dst.variables['trange_lb'][:] = trange_ens_ub 
             
+        dst.fillna(0)
+        
 print('Done')
 print(datetime.datetime.now()-startTime)

@@ -9,11 +9,11 @@ set -e
 #------------------------------------------------------------
 # Update setup
 RootDir=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet
-SampleMode=random #uniform
+SampleMode=uniform #uniform random
 
 SourceDir=${RootDir}/scripts
-StnlistDir=${SourceDir}/step1_sample_stnlist_$SampleMode
-WorkDirBase=${RootDir}/test_$SampleMode
+StnlistDir=${SourceDir}/step1_sample_stnlist_${SampleMode}_perturb
+WorkDirBase=${RootDir}/test_${SampleMode}_perturb
 if [ ! -d ${WorkDirBase} ]; then mkdir -p ${WorkDirBase}; fi
 
 startEns=1  # start number of ensembles to generate
@@ -21,15 +21,15 @@ stopEns=100  # stop number of ensembles to generate
 sYear=2015 
 eYear=2016
 
-Program=/glade/u/home/hongli/tools/GMET-1/scrf/generate_ensemble.exe
+Program=/glade/u/home/hongli/tools/GMET-1/SHARP/scrf/generate_ensemble.exe
 Template=/glade/u/home/hongli/github/2020_04_21nldas_gmet/config/namelist.ens_forc.TEMPLATE.txt 
 GridInfo=${RootDir}/data/nldas_topo/conus_ens_grid_eighth.nc
 
 #------------------------------------------------------------
 FILES=( $(ls ${StnlistDir}/*.txt) )
 FILE_NUM=${#FILES[@]}
-for i in $(seq 0 $(($FILE_NUM -1))); do
-# for i in $(seq 2 3); do
+# for i in $(seq 1 $(($FILE_NUM -1))); do
+for i in $(seq 0 0); do
 
     FileName=${FILES[${i}]} 
     FileName=${FileName##*/} # get basename of filename
@@ -62,6 +62,7 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
         sed "s,GridInfo,$GridInfo,g" |\
         sed "s,InRegrFile,$InRegrFile,g" |\
         sed "s,OutEnsForcRoot,$OutEnsForcRoot,g" > $ConfigFile
+        chmod 740 ${ConfigFile}
 
         # create job submission file
         CommandFile=${WorkDir}/tmp/qsub.ens_forc.$Y
@@ -87,7 +88,7 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
         echo "${Program} ${ConfigFile}" >> ${CommandFile}
         chmod 740 ${CommandFile}
         
-        #qsub ${CommandFile}
+        qsub ${CommandFile}
 
      done
 done

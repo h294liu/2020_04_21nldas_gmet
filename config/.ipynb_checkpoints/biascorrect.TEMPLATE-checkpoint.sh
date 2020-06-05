@@ -6,9 +6,6 @@ set -e
 
 #==========================input (need update)=========================== 
 RootDir=ROOTDIR 
-NldasDir=$RootDir/data/nldas_daily_utc
-SourceDir=$RootDir/scripts
-
 EnsDirBase=ENSDIRBASE
 if [ ! -d $EnsDirBase ]; then mkdir -p $EnsDirBase; fi
 
@@ -19,6 +16,8 @@ numEns=$(($stopEns - $startEns +1))
 NldasFile=NLDASFILE
 CaseID=CASEID
 Year=YEAR
+SubstractPy=SUBSTRACTPy
+AdditionPy=ADDITIONPy
 
 #==========================bias correction (no need to update)===========================
 
@@ -39,13 +38,14 @@ EnsFile=$EnsDir/ens_forc.$Year.$startEns_NUM.nc
 EnsMeanFile=$TmpDir/ens_forc.$Year.mean.nc
 rm -f $EnsMeanFile
 
-ncea -h -n $numEns,3,1 -v pcp,t_mean $EnsFile $EnsMeanFile # -n file_number,digit_number,numeric_increment
+ncea -h -n $numEns,3,1 -v pcp,t_mean,t_range $EnsFile $EnsMeanFile # -n file_number,digit_number,numeric_increment
 
 # calculate delta = NLDAS - ensemble mean
 echo calculate delta
 EnsBiasFile=$TmpDir/ens_forc.$Year.bias.nc
 rm -f $EnsBiasFile
-ncflint -h -w -1,1 -v pcp,t_mean $EnsMeanFile $NldasFile $EnsBiasFile # output is in file1 format 
+# ncflint -h -w -1,1 -v pcp,t_mean $EnsMeanFile $NldasFile $EnsBiasFile # output is in file1 format 
+python $SubstractPy $EnsMeanFile $NldasFile $EnsBiasFile # output is in file1 format 
 
 # bias correct all ensmeble members
 echo bias correct
@@ -61,11 +61,12 @@ for M in $(seq ${startEns} ${stopEns}); do
     rm -f $OutputFile
     
     # bias correct
-    ncflint -h -w 1,1 -v pcp,t_mean $InFile $EnsBiasFile $TmpFile
+#     ncflint -h -w 1,1 -v pcp,t_mean $InFile $EnsBiasFile $TmpFile
+    python $AdditionPy $InFile $EnsBiasFile $TmpFile
     
     # add corrected P and T to OutputFile
     cp $InFile $OutputFile
-    ncks -h -A -v pcp,t_mean $TmpFile $OutputFile
+    ncks -h -A -v pcp,t_mean,t_range $TmpFile $OutputFile
     rm -f $TmpFile 
     
 done

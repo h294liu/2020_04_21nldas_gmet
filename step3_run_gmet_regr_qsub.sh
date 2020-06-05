@@ -8,12 +8,15 @@ set -e
 #------------------------------------------------------------
 # Update setup
 RootDir=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet
-SampleMode=random #uniform
+SampleMode=uniform #uniform random
 
 SourceDir=${RootDir}/scripts
-StnlistDir=${SourceDir}/step1_sample_stnlist_$SampleMode
-StndataDir=${SourceDir}/step2_prepare_stndata_$SampleMode
-WorkDirBase=${RootDir}/test_$SampleMode
+# StnlistDir=${SourceDir}/step1_sample_stnlist_$SampleMode
+# StndataDir=${SourceDir}/step2_prepare_stndata_$SampleMode
+StnlistDir=${SourceDir}/step1_sample_stnlist_${SampleMode}_perturb
+StndataDir=${SourceDir}/step2_prepare_stndata_${SampleMode}_perturb
+
+WorkDirBase=${RootDir}/test_${SampleMode}_perturb
 if [ ! -d ${WorkDirBase} ]; then mkdir -p ${WorkDirBase}; fi
 
 StartDateStn=20150101
@@ -22,7 +25,7 @@ EndDateStn=20161231
 StartDateOut=20150101
 EndDateOut=20161231
 
-Program=/glade/u/home/hongli/tools/GMET-1/downscale/downscale.exe
+Program=/glade/u/home/hongli/tools/GMET-1/SHARP/downscale/downscale.exe 
 Template=/glade/u/home/hongli/github/2020_04_21nldas_gmet/config/config.ens_regr.TEMPLATE.txt 
 GridInfo=${RootDir}/data/nldas_topo/conus_ens_grid_eighth.nc
 
@@ -30,8 +33,8 @@ GridInfo=${RootDir}/data/nldas_topo/conus_ens_grid_eighth.nc
 # loop all stnlist files
 FILES=( $(ls ${StnlistDir}/*.txt) )
 FILE_NUM=${#FILES[@]}
-for i in $(seq 0 $(($FILE_NUM -1))); do
-# for i in $(seq 2 3); do
+for i in $(seq 1 $(($FILE_NUM -1))); do
+# for i in $(seq 0 0); do
 
     FileName=${FILES[${i}]} 
     FileName=${FileName##*/} # get basename of filename
@@ -68,7 +71,8 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
         fi
         
         # configure config, output and log files
-        ConfigFile=${WorkDir}/tmp/config.ens_regr.$Y
+#         ConfigFile=${WorkDir}/tmp/config.ens_regr.$Y
+        ConfigFile=${WorkDir}/tmp/config.$Y
         OutputFile=${WorkDir}/gmet_regr/regress_ts.$Y.nc
         if [ -e ${OutputFile} ]; then rm -rf ${OutputFile}; fi
         
@@ -82,6 +86,7 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
         sed "s,StartDateStn,$StartDateStn,g" |\
         sed "s,EndDateStn,$EndDateStn,g" |\
         sed "s,WeightFile,$WeightFile,g" > $ConfigFile
+        chmod 740 ${ConfigFile}
 
         # create job submission file
         CommandFile=${WorkDir}/tmp/qsub.ens_regr.$Y
@@ -107,6 +112,6 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
         echo "${Program} ${ConfigFile}" >> ${CommandFile}
         chmod 740 ${CommandFile}
         
-        #qsub ${CommandFile}
+        qsub ${CommandFile}
      done
 done
