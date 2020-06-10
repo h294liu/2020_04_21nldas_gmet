@@ -57,16 +57,22 @@ for i in range(ens_num):
     time = f['time'][:]
     pcp = f.variables['pcp'][:]
     tmean = f.variables['t_mean'][:]
+    tmin = f.variables['t_min'][:]
+    tmax = f.variables['t_max'][:]
     trange = f.variables['t_range'][:]
 
     if NUM == startEns: # create ens array for one member
         (nt,ny,nx) = np.shape(pcp)
         pcp_ens = np.zeros((nt,ny,nx,ens_num))
         tmean_ens = np.zeros((nt,ny,nx,ens_num))
+        tmin_ens = np.zeros((nt,ny,nx,ens_num))
+        tmax_ens = np.zeros((nt,ny,nx,ens_num))
         trange_ens = np.zeros((nt,ny,nx,ens_num))
 
     pcp_ens[:,:,:,i] = pcp
     tmean_ens[:,:,:,i] = tmean
+    tmin_ens[:,:,:,i] = tmin
+    tmax_ens[:,:,:,i] = tmax
     trange_ens[:,:,:,i] = trange
 
 #=================================================================================
@@ -87,6 +93,22 @@ tmean_ens_std = np.std(tmean_ens, axis = 3)
 tmean_ens_lb = np.percentile(tmean_ens, lb_perct, axis = 3)
 tmean_ens_ub = np.percentile(tmean_ens, ub_perct, axis = 3)
 del tmean_ens
+
+print('tmin')
+tmin_ens_mean = np.nanmean(tmin_ens, axis = 3)
+tmin_ens_median = np.nanmedian(tmin_ens, axis = 3)
+tmin_ens_std = np.std(tmin_ens, axis = 3)
+tmin_ens_lb = np.percentile(tmin_ens, lb_perct, axis = 3)
+tmin_ens_ub = np.percentile(tmin_ens, ub_perct, axis = 3)
+del tmin_ens
+
+print('tmax')
+tmax_ens_mean = np.nanmean(tmax_ens, axis = 3)
+tmax_ens_median = np.nanmedian(tmax_ens, axis = 3)
+tmax_ens_std = np.std(tmax_ens, axis = 3)
+tmax_ens_lb = np.percentile(tmax_ens, lb_perct, axis = 3)
+tmax_ens_ub = np.percentile(tmax_ens, ub_perct, axis = 3)
+del tmax_ens
 
 print('trange')
 trange_ens_mean = np.nanmean(trange_ens, axis = 3)
@@ -120,16 +142,26 @@ with nc.Dataset(SrcFile) as src:
         # create summary variables 
         vars_short = ['pcp_mean','pcp_median','pcp_std','pcp_ub','pcp_lb',
                      'tmean_mean','tmean_median','tmean_std','tmean_ub','tmean_lb',
+                      'tmin_mean','tmin_median','tmin_std','tmin_ub','tmin_lb',
+                      'tmax_mean','tmax_median','tmax_std','tmax_ub','tmax_lb',
                      'trange_mean','trange_median','trange_std','trange_ub','trange_lb']
-        vars_long = ['Mean daily precipitation','Median daily precipitation',
+        vars_long = ['Mean of daily precipitation','Median of daily precipitation',
                      'Standard deviation of daily precipitation',
                      ub_perct_str+'th percentile of daily precipitation',
                      lb_perct_str+'th percentile of daily precipitation',
-                     'Mean daily temperature', 'Median daily temperature',
+                     'Mean of daily mean temperature', 'Median of daily mean temperature',
                      'Standard deviation of daily mean temperature',
                      ub_perct_str+'th percentile of daily mean temperature',
                      lb_perct_str+'th percentile of daily mean temperature',
-                     'Mean daily temperature range', 'Median daily temperature range',
+                     'Mean of daily min temperature', 'Median of daily min temperature',
+                     'Standard deviation of daily min temperature',
+                     ub_perct_str+'th percentile of daily min temperature',
+                     lb_perct_str+'th percentile of daily min temperature',
+                     'Mean of daily max temperature', 'Median of daily max temperature',
+                     'Standard deviation of daily max temperature',
+                     ub_perct_str+'th percentile of daily max temperature',
+                     lb_perct_str+'th percentile of daily max temperature',
+                     'Mean of daily temperature range', 'Median of daily temperature range',
                      'Standard deviation of daily temperature range',
                      ub_perct_str+'th percentile of daily temperature range',
                      lb_perct_str+'th percentile of daily temperature range']
@@ -153,6 +185,18 @@ with nc.Dataset(SrcFile) as src:
         dst.variables['tmean_std'][:] = tmean_ens_std 
         dst.variables['tmean_ub'][:] = tmean_ens_lb
         dst.variables['tmean_lb'][:] = tmean_ens_ub 
+
+        dst.variables['tmin_mean'][:] = tmin_ens_mean
+        dst.variables['tmin_median'][:] = tmin_ens_median
+        dst.variables['tmin_std'][:] = tmin_ens_std 
+        dst.variables['tmin_ub'][:] = tmin_ens_lb
+        dst.variables['tmin_lb'][:] = tmin_ens_ub 
+
+        dst.variables['tmax_mean'][:] = tmax_ens_mean
+        dst.variables['tmax_median'][:] = tmax_ens_median
+        dst.variables['tmax_std'][:] = tmax_ens_std 
+        dst.variables['tmax_ub'][:] = tmax_ens_lb
+        dst.variables['tmax_lb'][:] = tmax_ens_ub 
 
         dst.variables['trange_mean'][:] = trange_ens_mean
         dst.variables['trange_median'][:] = trange_ens_median

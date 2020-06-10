@@ -9,10 +9,10 @@ ScriptPath=/glade/u/home/hongli/github/2020_04_21nldas_gmet/step7_stn_ens_summar
 EnsDirBase=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet/data
 EnsFolder=stn_ens
 
-sYear=1980 
-eYear=2014
-# sYear=2015 
-# eYear=2016
+# sYear=1980 
+# eYear=2014
+sYear=2015 
+eYear=2016
 
 startEns=1
 stopEns=100
@@ -42,7 +42,7 @@ for Y in $(seq $sYear $eYear); do
     echo "#SBATCH --job-name=smry.$Y" >> $CommandFile
     echo '#SBATCH --account=P48500028' >> $CommandFile
     echo '#SBATCH --ntasks=1' >> $CommandFile
-    echo '#SBATCH --time=02:30:00' >> $CommandFile
+    echo '#SBATCH --time=04:30:00' >> $CommandFile
     echo '#SBATCH --mem=256000' >> $CommandFile # memory in MB. 250GB. Actually only uses 182GB.
     echo '#SBATCH --partition=dav' >> $CommandFile 
     echo "#SBATCH --output=$LogFile.%j" >> $CommandFile 

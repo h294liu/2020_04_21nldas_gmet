@@ -42,11 +42,18 @@ for M in $(seq ${startEns} ${stopEns}); do
     # add corrected P and T to OutputFile
     cp $InFile $OutputFile
     ncks -h -A -v pcp,t_mean,t_min,t_max $TmpFile $OutputFile
+    rm -f $TmpFile 
     
     # calculate t_range based on bias-correct t_min and t_max
     ncap2 -h -A -s 't_range=t_max-t_min;' $OutputFile
     
-    rm -f $TmpFile 
+    # modify missing value to the same as gmet data
+    ncatted -h -a _FillValue,pcp,o,f,-999 $OutputFile
+    ncatted -h -a _FillValue,t_mean,o,f,-999 $OutputFile
+    ncatted -h -a _FillValue,t_min,o,f,-999 $OutputFile
+    ncatted -h -a _FillValue,t_max,o,f,-999 $OutputFile
+    ncatted -h -a _FillValue,t_range,o,f,-999 $OutputFile
+    
     
 done
 

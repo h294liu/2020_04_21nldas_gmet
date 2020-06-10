@@ -19,22 +19,24 @@ Pths=(5 95)
 # loop all stnlist files
 FILES=( $(ls ${EnsDirBase}) )
 FILE_NUM=${#FILES[@]}
-# for i in $(seq 0 $(($FILE_NUM -1))); do
+# for i in $(seq 1 $(($FILE_NUM -1))); do
 for i in $(seq 0 0); do
     
     CaseID=${FILES[${i}]}
     echo $CaseID
-    
-    # set up ensemble folders
-    EnsDir=$EnsDirBase/$CaseID/$EnsFolder
-    TmpDir=$EnsDirBase/$CaseID/tmp
-    if [ ! -d $TmpDir ]; then mkdir $TmpDir; fi
-    
+        
     # loop ensemble and bias-correct ensemble 
     for EnsFolder in ${EnsFolders[@]}; do
         echo ------------------------------
         echo $EnsFolder
-        
+
+        # set up ensemble folders
+        EnsDir=$EnsDirBase/$CaseID/$EnsFolder
+        TmpDir=$EnsDirBase/$CaseID/tmp
+        EnsSumDir=$EnsDirBase/$CaseID/${EnsFolder}_summary
+        if [ ! -d $TmpDir ]; then mkdir $TmpDir; fi
+        if [ ! -d $EnsSumDir ]; then mkdir $EnsSumDir; fi
+
         # loop years
         for Y in $(seq $sYear $eYear); do
             echo $Y   

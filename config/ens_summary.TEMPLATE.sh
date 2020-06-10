@@ -18,9 +18,7 @@ module load cdo
 echo $CaseID,$Year
 EnsDir=$EnsDirBase/$CaseID/$EnsFolder
 EnsFile=$EnsDir/ens_forc.$Year.*.nc
-
 EnsSumDir=$EnsDirBase/$CaseID/${EnsFolder}_summary
-if [ ! -d $EnsSumDir ]; then mkdir $EnsSumDir; fi
 
 if [ $Metric = ensmean ] || [ $Metric = ensstd ]; then
     echo $Metric   

@@ -37,8 +37,7 @@ for i in $(seq 1 $(($FILE_NUM -1))); do
             ConfigFile=$EnsDirBase/$CaseID/tmp/config.tmin_tmax.$Y.${startEns_i}_${stopEns_i}.sh
 
             sed "s,ENSDIR,$EnsDir,g" $Template |\
-            sed "s,SYEAR,$sYear,g" |\
-            sed "s,EYEAR,$eYear,g" |\
+            sed "s,YEAR,$Y,g" |\
             sed "s,STARTENS,$startEns_i,g" |\
             sed "s,STOPENS,$stopEns_i,g" > $ConfigFile
             chmod 744 $ConfigFile
