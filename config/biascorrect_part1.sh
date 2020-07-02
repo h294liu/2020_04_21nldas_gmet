@@ -24,7 +24,8 @@ echo $Year
 
 EnsMeanFile=$TmpDir/ens_forc.$Year.mean.nc
 EnsBiasFile=$TmpDir/ens_forc.$Year.bias.nc
-rm -f $EnsMeanFile $EnsBiasFile
+rm -f $EnsBiasFile
+# rm -f $EnsMeanFile $EnsBiasFile
 
 # calculate ensemble mean over members (time,y,x)
 echo calculate ensmeble mean
@@ -34,4 +35,4 @@ ncea -h -n $numEns,3,1 -v pcp,t_mean,t_min,t_max $EnsFile $EnsMeanFile # -n file
 
 # calculate delta = NLDAS - ensemble mean
 echo calculate delta
-ncflint -h -v pcp,t_mean,t_min,t_max -w -1,1 $EnsMeanFile $NldasFile $EnsBiasFile # output is in file1 format 
+ncflint -h --fix_rec_crd -v pcp,t_mean,t_min,t_max -w -1,1 $EnsMeanFile $NldasFile $EnsBiasFile # output is in file1 format 

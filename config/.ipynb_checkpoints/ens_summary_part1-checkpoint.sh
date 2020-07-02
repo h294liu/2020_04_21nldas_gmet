@@ -27,7 +27,7 @@ if [ $Metric = ensmean ] || [ $Metric = ensstd ]; then
     cdo $Metric $EnsFile $OutputFile
 
     ncatted -h -O -a history,global,d,, $OutputFile # remove history
-    ncatted -h -a _FillValue,,o,f,0 $OutputFile # modify missing value to the same as gmet data
+    ncatted -h -a _FillValue,,o,d,1e+20 $OutputFile # modify missing value to the same as gmet data
 
 elif [ $Metric = enspctl ]; then
     echo $Metric.$Pth        
@@ -36,5 +36,5 @@ elif [ $Metric = enspctl ]; then
     cdo $Metric,$Pth $EnsFile $OutputFile
 
     ncatted -O -a history,global,d,, $OutputFile # remove history
-    ncatted -h -a _FillValue,,o,f,0 $OutputFile # modify missing value to the same as gmet data
+    ncatted -h -a _FillValue,,o,d,1e+20 $OutputFile # modify missing value to the same as gmet data
 fi

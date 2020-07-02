@@ -84,7 +84,11 @@ pcp_ens_median = np.nanmedian(pcp_ens, axis = 3)
 pcp_ens_std = np.std(pcp_ens, axis = 3)
 pcp_ens_lb = np.percentile(pcp_ens, lb_perct, axis = 3)
 pcp_ens_ub = np.percentile(pcp_ens, ub_perct, axis = 3)
-del pcp_ens
+
+pcp_ens_median_4d = np.repeat(pcp_ens_median[:,:,:,np.newaxis], ens_num, axis = 3)
+y = np.absolute(pcp_ens - pcp_ens_median_4d)
+pcp_ens_mad = np.nanmedian(y, axis = 3)
+del pcp_ens,pcp_ens_median_4d,y
 
 print('tmean')
 tmean_ens_mean = np.nanmean(tmean_ens, axis = 3)
@@ -92,7 +96,11 @@ tmean_ens_median = np.nanmedian(tmean_ens, axis = 3)
 tmean_ens_std = np.std(tmean_ens, axis = 3)
 tmean_ens_lb = np.percentile(tmean_ens, lb_perct, axis = 3)
 tmean_ens_ub = np.percentile(tmean_ens, ub_perct, axis = 3)
-del tmean_ens
+
+tmean_ens_median_4d = np.repeat(tmean_ens_median[:,:,:,np.newaxis], ens_num, axis = 3)
+y = np.absolute(tmean_ens - tmean_ens_median_4d)
+tmean_ens_mad = np.nanmedian(y, axis = 3)
+del tmean_ens,tmean_ens_median_4d,y
 
 print('tmin')
 tmin_ens_mean = np.nanmean(tmin_ens, axis = 3)
@@ -100,7 +108,11 @@ tmin_ens_median = np.nanmedian(tmin_ens, axis = 3)
 tmin_ens_std = np.std(tmin_ens, axis = 3)
 tmin_ens_lb = np.percentile(tmin_ens, lb_perct, axis = 3)
 tmin_ens_ub = np.percentile(tmin_ens, ub_perct, axis = 3)
-del tmin_ens
+
+tmin_ens_median_4d = np.repeat(tmin_ens_median[:,:,:,np.newaxis], ens_num, axis = 3)
+y = np.absolute(tmin_ens - tmin_ens_median_4d)
+tmin_ens_mad = np.nanmedian(y, axis = 3)
+del tmin_ens,tmin_ens_median_4d,y
 
 print('tmax')
 tmax_ens_mean = np.nanmean(tmax_ens, axis = 3)
@@ -108,7 +120,11 @@ tmax_ens_median = np.nanmedian(tmax_ens, axis = 3)
 tmax_ens_std = np.std(tmax_ens, axis = 3)
 tmax_ens_lb = np.percentile(tmax_ens, lb_perct, axis = 3)
 tmax_ens_ub = np.percentile(tmax_ens, ub_perct, axis = 3)
-del tmax_ens
+
+tmax_ens_median_4d = np.repeat(tmax_ens_median[:,:,:,np.newaxis], ens_num, axis = 3)
+y = np.absolute(tmax_ens - tmax_ens_median_4d)
+tmax_ens_mad = np.nanmedian(y, axis = 3)
+del tmax_ens,tmax_ens_median_4d,y
 
 print('trange')
 trange_ens_mean = np.nanmean(trange_ens, axis = 3)
@@ -116,7 +132,11 @@ trange_ens_median = np.nanmedian(trange_ens, axis = 3)
 trange_ens_std = np.std(trange_ens, axis = 3)
 trange_ens_lb = np.percentile(trange_ens, lb_perct, axis = 3)
 trange_ens_ub = np.percentile(trange_ens, ub_perct, axis = 3)
-del trange_ens
+
+trange_ens_median_4d = np.repeat(trange_ens_median[:,:,:,np.newaxis], ens_num, axis = 3)
+y = np.absolute(trange_ens - trange_ens_median_4d)
+trange_ens_mad = np.nanmedian(y, axis = 3)
+del trange_ens,trange_ens_median_4d,y
 
 #=================================================================================
 #save statistics summary
@@ -140,34 +160,46 @@ with nc.Dataset(SrcFile) as src:
                 dst[name][:]=src[name][:]                
 
         # create summary variables 
-        vars_short = ['pcp_mean','pcp_median','pcp_std','pcp_ub','pcp_lb',
-                     'tmean_mean','tmean_median','tmean_std','tmean_ub','tmean_lb',
-                      'tmin_mean','tmin_median','tmin_std','tmin_ub','tmin_lb',
-                      'tmax_mean','tmax_median','tmax_std','tmax_ub','tmax_lb',
-                     'trange_mean','trange_median','trange_std','trange_ub','trange_lb']
+        vars_short = ['pcp_mean','pcp_median','pcp_std',
+                      'pcp_lb','pcp_ub','pcp_mad',
+                      'tmean_mean','tmean_median','tmean_std',
+                      'tmean_lb','tmean_ub','tmean_mad',
+                      'tmin_mean','tmin_median','tmin_std',
+                      'tmin_lb','tmin_ub','tmin_mad',
+                      'tmax_mean','tmax_median','tmax_std',
+                      'tmax_lb','tmax_ub','tmax_mad',
+                      'trange_mean','trange_median','trange_std',
+                      'trange_lb','trange_ub','trange_mad']
         vars_long = ['Mean of daily precipitation','Median of daily precipitation',
                      'Standard deviation of daily precipitation',
-                     ub_perct_str+'th percentile of daily precipitation',
                      lb_perct_str+'th percentile of daily precipitation',
+                     ub_perct_str+'th percentile of daily precipitation',
+                     'Median absolute deviation of daily precipitation',
                      'Mean of daily mean temperature', 'Median of daily mean temperature',
                      'Standard deviation of daily mean temperature',
-                     ub_perct_str+'th percentile of daily mean temperature',
                      lb_perct_str+'th percentile of daily mean temperature',
+                     ub_perct_str+'th percentile of daily mean temperature',
+                     'Median absolute deviation of daily mean temperature',
                      'Mean of daily min temperature', 'Median of daily min temperature',
                      'Standard deviation of daily min temperature',
-                     ub_perct_str+'th percentile of daily min temperature',
                      lb_perct_str+'th percentile of daily min temperature',
+                     ub_perct_str+'th percentile of daily min temperature',
+                     'Median absolute deviation of daily min temperature',
                      'Mean of daily max temperature', 'Median of daily max temperature',
                      'Standard deviation of daily max temperature',
-                     ub_perct_str+'th percentile of daily max temperature',
                      lb_perct_str+'th percentile of daily max temperature',
+                     ub_perct_str+'th percentile of daily max temperature',
+                     'Median absolute deviation of daily max temperature',
                      'Mean of daily temperature range', 'Median of daily temperature range',
                      'Standard deviation of daily temperature range',
+                     lb_perct_str+'th percentile of daily temperature range',
                      ub_perct_str+'th percentile of daily temperature range',
-                     lb_perct_str+'th percentile of daily temperature range']
-        units = ['mm/day', 'mm/day', 'mm/day', 'mm/day','mm/day',
-                 'degC', 'degC', 'degC', 'degC', 'degC',
-                 'degC', 'degC', 'degC', 'degC','degC']
+                     'Median absolute deviation of daily temperature range']
+        units = ['mm/day', 'mm/day', 'mm/day', 'mm/day','mm/day','mm/day',
+                 'degC', 'degC', 'degC', 'degC', 'degC', 'degC',
+                 'degC', 'degC', 'degC', 'degC', 'degC', 'degC',
+                 'degC', 'degC', 'degC', 'degC', 'degC', 'degC',
+                 'degC', 'degC', 'degC', 'degC','degC', 'degC']
 
         for i, var in enumerate(vars_short):
             var_i = dst.createVariable(var,np.float64,('time','lat','lon')) # note: unlimited dimension is leftmost
@@ -177,34 +209,39 @@ with nc.Dataset(SrcFile) as src:
         dst.variables['pcp_mean'][:] = pcp_ens_mean
         dst.variables['pcp_median'][:] = pcp_ens_median
         dst.variables['pcp_std'][:] = pcp_ens_std 
-        dst.variables['pcp_ub'][:] = pcp_ens_lb
-        dst.variables['pcp_lb'][:] = pcp_ens_ub 
+        dst.variables['pcp_lb'][:] = pcp_ens_lb
+        dst.variables['pcp_ub'][:] = pcp_ens_ub 
+        dst.variables['pcp_mad'][:] = pcp_ens_mad 
 
         dst.variables['tmean_mean'][:] = tmean_ens_mean
         dst.variables['tmean_median'][:] = tmean_ens_median
         dst.variables['tmean_std'][:] = tmean_ens_std 
-        dst.variables['tmean_ub'][:] = tmean_ens_lb
-        dst.variables['tmean_lb'][:] = tmean_ens_ub 
+        dst.variables['tmean_lb'][:] = tmean_ens_lb
+        dst.variables['tmean_ub'][:] = tmean_ens_ub 
+        dst.variables['tmean_mad'][:] = tmean_ens_mad 
 
         dst.variables['tmin_mean'][:] = tmin_ens_mean
         dst.variables['tmin_median'][:] = tmin_ens_median
         dst.variables['tmin_std'][:] = tmin_ens_std 
-        dst.variables['tmin_ub'][:] = tmin_ens_lb
-        dst.variables['tmin_lb'][:] = tmin_ens_ub 
+        dst.variables['tmin_lb'][:] = tmin_ens_lb
+        dst.variables['tmin_ub'][:] = tmin_ens_ub 
+        dst.variables['tmin_mad'][:] = tmin_ens_mad 
 
         dst.variables['tmax_mean'][:] = tmax_ens_mean
         dst.variables['tmax_median'][:] = tmax_ens_median
         dst.variables['tmax_std'][:] = tmax_ens_std 
-        dst.variables['tmax_ub'][:] = tmax_ens_lb
-        dst.variables['tmax_lb'][:] = tmax_ens_ub 
+        dst.variables['tmax_lb'][:] = tmax_ens_lb
+        dst.variables['tmax_ub'][:] = tmax_ens_ub 
+        dst.variables['tmax_mad'][:] = tmax_ens_mad 
 
         dst.variables['trange_mean'][:] = trange_ens_mean
         dst.variables['trange_median'][:] = trange_ens_median
         dst.variables['trange_std'][:] = trange_ens_std 
-        dst.variables['trange_ub'][:] = trange_ens_lb
-        dst.variables['trange_lb'][:] = trange_ens_ub 
+        dst.variables['trange_lb'][:] = trange_ens_lb
+        dst.variables['trange_ub'][:] = trange_ens_ub 
+        dst.variables['trange_mad'][:] = trange_ens_mad 
             
-        dst.fillna(0)
+        dst.fillna(-999)
         
 print('Done')
 print(datetime.datetime.now()-startTime)

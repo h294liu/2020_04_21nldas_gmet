@@ -6,21 +6,24 @@ set -e
   
 RootDir=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet #cheyenne
 EnsDirBase=$RootDir/test_uniform_perturb
-Template=$RootDir/scripts/config/ens_summary.TEMPLATE.sh
+Template=$RootDir/scripts/config/ens_summary_part1.sh
 
 EnsFolders=(gmet_ens gmet_ens_bc)
 # EnsFolders=(gmet_ens_bc)
 sYear=2015 
 eYear=2016
-cdoMetrics=(ensmean ensstd enspctl)
-Pths=(5 95)
+# cdoMetrics=(ensmean ensstd enspctl)
+# Pths=(5 95)
+
+cdoMetrics=(enspctl)
+Pths=(50)
 
 #==========================bias correction===========================
 # loop all stnlist files
 FILES=( $(ls ${EnsDirBase}) )
 FILE_NUM=${#FILES[@]}
-# for i in $(seq 1 $(($FILE_NUM -1))); do
-for i in $(seq 0 0); do
+for i in $(seq 0 $(($FILE_NUM -1))); do
+# for i in $(seq 0 0); do
     
     CaseID=${FILES[${i}]}
     echo $CaseID

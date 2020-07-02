@@ -24,6 +24,13 @@ for mmb in $(seq $startEns $stopEns); do
     
     ncatted -h -a long_name,t_min,o,c,"estimated daily min temperature" $inFile
     ncatted -h -a long_name,t_max,o,c,"estimated daily max temperature" $inFile
+
+    # modify missing value to the same as gmet data
+    ncatted -h -a _FillValue,pcp,o,d,1e+20 $inFile
+    ncatted -h -a _FillValue,t_mean,o,d,1e+20 $inFile
+    ncatted -h -a _FillValue,t_min,o,d,1e+20 $inFile
+    ncatted -h -a _FillValue,t_max,o,d,1e+20 $inFile
+    ncatted -h -a _FillValue,t_range,o,d,1e+20 $inFile
     
 done
 

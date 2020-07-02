@@ -19,8 +19,8 @@ eYear=2016
 # loop all stnlist files
 FILES=( $(ls ${EnsDirBase}) )
 FILE_NUM=${#FILES[@]}
-for i in $(seq 1 $(($FILE_NUM -1))); do
-# for i in $(seq 0 0); do
+# for i in $(seq 1 $(($FILE_NUM -1))); do
+for i in $(seq 0 0); do
     
     CaseID=${FILES[${i}]}
     EnsDir=$EnsDirBase/$CaseID/gmet_ens

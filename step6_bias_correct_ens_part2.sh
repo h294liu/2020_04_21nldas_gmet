@@ -42,14 +42,12 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
 
             # setup configuration file
             ConfigFile=$EnsDirBase/$CaseID/tmp/config.bias_corr.$Y.${startEns_i}_${stopEns_i}.sh
-            NldasFile=$NewNldasDir/NLDAS_$Y.nc
 
             sed "s,ENSDIR,$EnsDir,g" $Template |\
             sed "s,ENSBCDIR,$EnsBcDir,g" |\
             sed "s,TMPDIR,$TmpDir,g" |\
             sed "s,STARTENS,$startEns_i,g" |\
             sed "s,STOPENS,$stopEns_i,g" |\
-            sed "s,NLDASFILE,$NldasFile,g" |\
             sed "s,YEAR,$Y,g" > $ConfigFile
             chmod 744 $ConfigFile
 

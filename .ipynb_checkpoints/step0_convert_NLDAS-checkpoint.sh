@@ -7,10 +7,10 @@ set -e
   
 RootDir=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet #cheyenne
 NldasDir=$RootDir/data/nldas_daily_utc
-sYear=1980 
-eYear=2014
-# sYear=2015 
-# eYear=2016
+# sYear=1980 
+# eYear=2014
+sYear=2015 
+eYear=2016
 
 NewNldasDir=$RootDir/data/nldas_daily_utc_convert
 if [ ! -d $NewNldasDir ]; then mkdir -p $NewNldasDir; fi
@@ -36,11 +36,11 @@ for Y in $(seq $sYear $eYear); do
     rm -f $TmpFile
     
     # modify missing value to the same as gmet data
-    ncatted -h -a _FillValue,pcp,o,f,0 $NldasNewFile
-    ncatted -h -a _FillValue,t_mean,o,f,0 $NldasNewFile
-    ncatted -h -a _FillValue,t_min,o,f,0 $NldasNewFile
-    ncatted -h -a _FillValue,t_max,o,f,0 $NldasNewFile
-    ncatted -h -a _FillValue,t_range,o,f,0 $NldasNewFile
+    ncatted -h -a _FillValue,pcp,o,d,1e+20 $NldasNewFile
+    ncatted -h -a _FillValue,t_mean,o,d,1e+20 $NldasNewFile
+    ncatted -h -a _FillValue,t_min,o,d,1e+20 $NldasNewFile
+    ncatted -h -a _FillValue,t_max,o,d,1e+20 $NldasNewFile
+    ncatted -h -a _FillValue,t_range,o,d,1e+20 $NldasNewFile
     
 done
 

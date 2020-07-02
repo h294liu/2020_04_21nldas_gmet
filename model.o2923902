@@ -1,0 +1,17 @@
+/glade/u/home/hongli/tools/miniconda3/envs/conda_hongli/lib/python3.8/site-packages/xarray/conventions.py:487: SerializationWarning: variable 't_max' has multiple fill values {1e+20, 1e+20}, decoding all values to NaN.
+  new_vars[k] = decode_cf_variable(
+/glade/u/home/hongli/tools/miniconda3/envs/conda_hongli/lib/python3.8/site-packages/xarray/conventions.py:487: SerializationWarning: variable 't_min' has multiple fill values {1e+20, 1e+20}, decoding all values to NaN.
+  new_vars[k] = decode_cf_variable(
+/glade/u/home/hongli/tools/miniconda3/envs/conda_hongli/lib/python3.8/site-packages/xarray/conventions.py:487: SerializationWarning: variable 't_range' has multiple fill values {1e+20, 1e+20}, decoding all values to NaN.
+  new_vars[k] = decode_cf_variable(
+/glade/u/home/hongli/tools/miniconda3/envs/conda_hongli/lib/python3.8/site-packages/xarray/conventions.py:487: SerializationWarning: variable 't_max' has multiple fill values {1e+20, 1e+20}, decoding all values to NaN.
+  new_vars[k] = decode_cf_variable(
+/glade/u/home/hongli/tools/miniconda3/envs/conda_hongli/lib/python3.8/site-packages/xarray/conventions.py:487: SerializationWarning: variable 't_min' has multiple fill values {1e+20, 1e+20}, decoding all values to NaN.
+  new_vars[k] = decode_cf_variable(
+/glade/u/home/hongli/tools/miniconda3/envs/conda_hongli/lib/python3.8/site-packages/xarray/conventions.py:487: SerializationWarning: variable 't_range' has multiple fill values {1e+20, 1e+20}, decoding all values to NaN.
+  new_vars[k] = decode_cf_variable(
+Read gridinfo mask
+Read nldas data
+row  0
+row  1
+Done
