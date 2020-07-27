@@ -2,7 +2,7 @@
 set -e
 
 # H. liu, April 30, 2020.
-# Bias correct NLDAS-based GMET ensemble in comparison with NLDAS data.
+# Calculate |x-q05| for MAD spread metric
 # Part 2: correct bias
 
 #==========================input (need update)=========================== 

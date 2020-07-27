@@ -8,13 +8,15 @@ RootDir=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet #cheyenne
 NewNldasDir=$RootDir/data/nldas_daily_utc_convert
 EnsDirBase=$RootDir/test_uniform_perturb
 
-Template=$RootDir/scripts/config/biascorrect_part2.sh
+configFileName=biascorrect_part2.sh
+configFileNameShort="${configFileName/.sh/}"
+Template=$RootDir/scripts/config/$configFileName
 
 startEns=1   # start number of ensembles to generate
 stopEns=100  # stop number of ensembles to generate
 interval=5
 
-sYear=2015 
+sYear=2016 
 eYear=2016
 
 #==========================bias correction===========================
@@ -41,7 +43,7 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
             echo $Y $startEns_i $stopEns_i
 
             # setup configuration file
-            ConfigFile=$EnsDirBase/$CaseID/tmp/config.bias_corr.$Y.${startEns_i}_${stopEns_i}.sh
+            ConfigFile=$EnsDirBase/$CaseID/tmp/$configFileNameShort.$Y.${startEns_i}_${stopEns_i}.sh
 
             sed "s,ENSDIR,$EnsDir,g" $Template |\
             sed "s,ENSBCDIR,$EnsBcDir,g" |\
@@ -52,8 +54,8 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
             chmod 744 $ConfigFile
 
             # create job submission file
-            CommandFile=$EnsDirBase/$CaseID/tmp/qsub.bias_corr.$Y.${startEns_i}_${stopEns_i}
-            LogFile=$EnsDirBase/$CaseID/tmp/log.bias_corr.$Y.${startEns_i}_${stopEns_i}
+            CommandFile=$EnsDirBase/$CaseID/tmp/qsub.$configFileNameShort.$Y.${startEns_i}_${stopEns_i}.sh
+            LogFile=$EnsDirBase/$CaseID/tmp/log.$configFileNameShort.$Y.${startEns_i}_${stopEns_i}
             rm -f ${CommandFile} $LogFile.*
 
             echo '#!/bin/bash' > $CommandFile

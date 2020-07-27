@@ -2,27 +2,27 @@
 set -e
 
 # H. liu, May 1, 2020.
-# Bias correct NLDAS-based GMET ensemble in comparison with NLDAS data.
+# ensemble statistic summary.
   
 RootDir=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet #cheyenne
 EnsDirBase=$RootDir/test_uniform_perturb
-Template=$RootDir/scripts/config/ens_summary_part1.sh
+
+configFileName=ens_summary_part1.sh
+configFileNameShort="${configFileName/.sh/}"
+Template=$RootDir/scripts/config/$configFileName
 
 EnsFolders=(gmet_ens gmet_ens_bc)
 # EnsFolders=(gmet_ens_bc)
-sYear=2015 
+sYear=2016 
 eYear=2016
-# cdoMetrics=(ensmean ensstd enspctl)
-# Pths=(5 95)
-
-cdoMetrics=(enspctl)
-Pths=(50)
+cdoMetrics=(ensmean ensstd enspctl)
+Pths=(5 95 25 50 75)
 
 #==========================bias correction===========================
 # loop all stnlist files
 FILES=( $(ls ${EnsDirBase}) )
 FILE_NUM=${#FILES[@]}
-for i in $(seq 0 $(($FILE_NUM -1))); do
+for i in $(seq 1 $(($FILE_NUM -1))); do
 # for i in $(seq 0 0); do
     
     CaseID=${FILES[${i}]}
@@ -51,7 +51,7 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
                     echo $Metric
 
                     # (1) setup configuration file
-                    ConfigFile=$TmpDir/config.${EnsFolder}_summary.$Y.$Metric.sh
+                    ConfigFile=$TmpDir/$configFileNameShort.${EnsFolder}_summary.$Y.$Metric.sh
                     sed "s,ENSDIRBASE,$EnsDirBase,g" $Template |\
                     sed "s,CASEID,$CaseID,g" |\
                     sed "s,ENSFOLDER,$EnsFolder,g" |\
@@ -60,8 +60,8 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
                     chmod 744 $ConfigFile
 
                     # (2) create job submission file
-                    CommandFile=$TmpDir/qsub.${EnsFolder}_summary.$Y.$Metric
-                    LogFile=$TmpDir/log.${EnsFolder}_summary.$Y.$Metric
+                    CommandFile=$TmpDir/qsub.$configFileNameShort.${EnsFolder}_summary.$Y.$Metric.sh
+                    LogFile=$TmpDir/log.$configFileNameShort.${EnsFolder}_summary.$Y.$Metric
                     rm -f ${CommandFile} $LogFile.*
 
                     echo '#!/bin/bash' > $CommandFile

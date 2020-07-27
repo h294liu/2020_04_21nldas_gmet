@@ -8,15 +8,13 @@ RootDir=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet #cheyenne
 NewNldasDir=$RootDir/data/nldas_daily_utc_convert
 EnsDirBase=$RootDir/test_uniform_perturb
 
-Template=$RootDir/scripts/config/biascorrect_part1.sh
-SubstractPy=$RootDir/scripts/config/substract.py
-AdditionPy=$RootDir/scripts/config/addition.py
+configFileName=biascorrect_part1.sh
+configFileNameShort="${configFileName/.sh/}"
+Template=$RootDir/scripts/config/$configFileName
 
 startEns=1   # start number of ensembles to generate
-stopEns=100  # stop number of ensembles to generate
-interval=5
 
-sYear=2015 
+sYear=2016 
 eYear=2016
 
 #==========================bias correction===========================
@@ -38,32 +36,25 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
     for Y in $(seq $sYear $eYear); do
         echo $Y
     
-        # remove useless files
-        ConfigFile=$EnsDirBase/$CaseID/tmp/config.bias_corr.$Y.sh
-        CommandFile=$EnsDirBase/$CaseID/tmp/qsub.bias_corr.$Y
-        LogFile1=$EnsDirBase/$CaseID/tmp/log.bias_corr.$Y.o
-        LogFile2=$EnsDirBase/$CaseID/tmp/log.bias_corr.$Y.e
-        for file in $ConfigFile $CommandFile $LogFile1 $LogFile2; do
-            if [ -e $file ]; then rm $file; fi
-        done        
-
         # setup configuration file
-        ConfigFile=$EnsDirBase/$CaseID/tmp/config.bias_corr.$Y.sh
+        ConfigFile=$EnsDirBase/$CaseID/tmp/$configFileNameShort.$Y.sh
         NldasFile=$NewNldasDir/NLDAS_$Y.nc
 
         sed "s,ENSDIR,$EnsDir,g" $Template |\
         sed "s,ENSBCDIR,$EnsBcDir,g" |\
         sed "s,TMPDIR,$TmpDir,g" |\
         sed "s,STARTENS,$startEns,g" |\
-        sed "s,STOPENS,$stopEns,g" |\
         sed "s,NLDASFILE,$NldasFile,g" |\
         sed "s,YEAR,$Y,g" > $ConfigFile
         chmod 744 $ConfigFile
 
         # create job submission file
-        CommandFile=$EnsDirBase/$CaseID/tmp/qsub.bias_corr.$Y
-        LogFile=$EnsDirBase/$CaseID/tmp/log.bias_corr.$Y
-        rm -f ${CommandFile} $LogFile.*
+        CommandFile=$EnsDirBase/$CaseID/tmp/qsub.$configFileNameShort.$Y.sh
+        LogFile1=$EnsDirBase/$CaseID/tmp/log.$configFileNameShort.$Y.o
+        LogFile2=$EnsDirBase/$CaseID/tmp/log.$configFileNameShort.$Y.e
+        for file in $CommandFile $LogFile1 $LogFile2; do
+            if [ -e $file ]; then rm $file; fi
+        done        
 
         echo '#!/bin/bash' > $CommandFile
         echo "#PBS -N bias.$CaseID" >> $CommandFile

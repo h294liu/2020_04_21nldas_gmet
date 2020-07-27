@@ -2,7 +2,7 @@
 set -e
 
 # H. Liu, April 27, 2020.
-# Run downscaling regression year by year using GMET downscaling code.
+# Generate WEIGHT file by running the first month regression using GMET downscaling code.
 # Reference: /home/hydrofcst/otl_support/forcings/GMET/run/run_ens_regr.csh
 
 #------------------------------------------------------------
@@ -11,29 +11,29 @@ RootDir=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet
 SampleMode=uniform #uniform random
 
 SourceDir=${RootDir}/scripts
-# StnlistDir=${SourceDir}/step1_sample_stnlist_$SampleMode
-# StndataDir=${SourceDir}/step2_prepare_stndata_$SampleMode
 StnlistDir=${SourceDir}/step1_sample_stnlist_${SampleMode}_perturb
 StndataDir=${SourceDir}/step2_prepare_stndata_${SampleMode}_perturb
 
 WorkDirBase=${RootDir}/test_${SampleMode}_perturb
 if [ ! -d ${WorkDirBase} ]; then mkdir -p ${WorkDirBase}; fi
 
-StartDateStn=20150101
+StartDateStn=20130101
 EndDateStn=20161231
 
-StartDateOut=20150101
-EndDateOut=20161231
+StartDateOut=20130101
+EndDateOut=20130131 #20161231
 
-Program=/glade/u/home/hongli/tools/GMET-1/SHARP/downscale/downscale.exe 
-Template=/glade/u/home/hongli/github/2020_04_21nldas_gmet/config/config.ens_regr.TEMPLATE.txt 
+Program=/glade/u/home/hongli/tools/GMET-1/SHARP/downscale/downscale_bc.exe 
+configFileName=config.ens_regr.part1.txt
+configFileNameShort="${configFileName/.txt/}"
+Template=/glade/u/home/hongli/github/2020_04_21nldas_gmet/config/$configFileName
 GridInfo=${RootDir}/data/nldas_topo/conus_ens_grid_eighth.nc
 
 #------------------------------------------------------------
 # loop all stnlist files
 FILES=( $(ls ${StnlistDir}/*.txt) )
 FILE_NUM=${#FILES[@]}
-for i in $(seq 1 $(($FILE_NUM -1))); do
+for i in $(seq 0 $(($FILE_NUM -1))); do
 # for i in $(seq 0 0); do
 
     FileName=${FILES[${i}]} 
@@ -71,7 +71,7 @@ for i in $(seq 1 $(($FILE_NUM -1))); do
         fi
         
         # configure config, output and log files
-#         ConfigFile=${WorkDir}/tmp/config.ens_regr.$Y
+#         ConfigFile=${WorkDir}/tmp/config.$Y
         ConfigFile=${WorkDir}/tmp/config.$Y
         OutputFile=${WorkDir}/gmet_regr/regress_ts.$Y.nc
         if [ -e ${OutputFile} ]; then rm -rf ${OutputFile}; fi
@@ -89,10 +89,10 @@ for i in $(seq 1 $(($FILE_NUM -1))); do
         chmod 740 ${ConfigFile}
 
         # create job submission file
-        CommandFile=${WorkDir}/tmp/qsub.ens_regr.$Y
+        CommandFile=${WorkDir}/tmp/qsub.$configFileNameShort.sh
         if [ -e ${command_file} ]; then rm -rf ${command_file}; fi
         
-        LogFile=${WorkDir}/tmp/log.ens_regr.$Y
+        LogFile=${WorkDir}/tmp/log.$configFileNameShort
         rm -f $LogFile.*
 
         echo '#!/bin/bash' > ${CommandFile}

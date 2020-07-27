@@ -2,15 +2,18 @@
 set -e
 
 # H. liu, May 1, 2020.
-# Bias correct NLDAS-based GMET ensemble in comparison with NLDAS data.
+# calculate MAD spread metric using median of abs|x-q05|.
   
 RootDir=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet #cheyenne
 EnsDirBase=$RootDir/test_uniform_perturb
-Template=$RootDir/scripts/config/ens_summary_part3.sh
+
+configFileName=ens_summary_part3.sh
+configFileNameShort="${configFileName/.sh/}"
+Template=$RootDir/scripts/config/$configFileName
 
 # EnsFolders=(gmet_ens gmet_ens_bc)
 EnsFolders=(gmet_ens)
-sYear=2015 
+sYear=2016 
 eYear=2016
 
 cdoMetrics=(enspctl)
@@ -48,7 +51,7 @@ for i in $(seq 0 0); do
                     echo $Metric.$Pth
 
                     # (1) setup configuration file
-                    ConfigFile=$TmpDir/config.${EnsFolder}.MAD.$Y.${startEns_i}_${stopEns_i}.sh
+                    ConfigFile=$TmpDir/$configFileNameShort.${EnsFolder}.$Y.${startEns_i}_${stopEns_i}.sh
                     sed "s,ENSSUMDIR,$EnsSumDir,g" $Template |\
                     sed "s,YEAR,$Y,g" |\
                     sed "s,METRIC,$Metric,g" |\
@@ -56,8 +59,8 @@ for i in $(seq 0 0); do
                     chmod 744 $ConfigFile
 
                     # (2) create job submission file
-                    CommandFile=$TmpDir/qsub.${EnsFolder}.MAD.$Y.$Metric.$Pth
-                    LogFile=$TmpDir/log.${EnsFolder}.MAD.$Y.$Metric.$Pth
+                    CommandFile=$TmpDir/qsub.$configFileNameShort.${EnsFolder}.$Y.$Metric.$Pth.sh
+                    LogFile=$TmpDir/log.$configFileNameShort.${EnsFolder}.$Y.$Metric.$Pth
                     rm -f ${CommandFile} $LogFile.*
 
                     echo '#!/bin/bash' > $CommandFile

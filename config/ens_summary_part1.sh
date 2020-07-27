@@ -2,7 +2,7 @@
 set -e
 
 # H. liu, April 30, 2020.
-# Bias correct NLDAS-based GMET ensemble in comparison with NLDAS data.
+# ensemble summary statistics, such as mean, std, median, and percentiles.
 
 #==========================input (need update)=========================== 
 EnsDirBase=ENSDIRBASE # ens results' parent directory
@@ -27,7 +27,7 @@ if [ $Metric = ensmean ] || [ $Metric = ensstd ]; then
     cdo $Metric $EnsFile $OutputFile
 
     ncatted -h -O -a history,global,d,, $OutputFile # remove history
-    ncatted -h -a _FillValue,,o,d,1e+20 $OutputFile # modify missing value to the same as gmet data
+#     ncatted -h -a _FillValue,,o,d,1e+20 $OutputFile # modify missing value to the same as gmet data
 
 elif [ $Metric = enspctl ]; then
     echo $Metric.$Pth        
@@ -35,6 +35,6 @@ elif [ $Metric = enspctl ]; then
     rm -f $OutputFile
     cdo $Metric,$Pth $EnsFile $OutputFile
 
-    ncatted -O -a history,global,d,, $OutputFile # remove history
-    ncatted -h -a _FillValue,,o,d,1e+20 $OutputFile # modify missing value to the same as gmet data
+    ncatted -h -O -a history,global,d,, $OutputFile # remove history
+#     ncatted -h -a _FillValue,,o,d,1e+20 $OutputFile # modify missing value to the same as gmet data
 fi

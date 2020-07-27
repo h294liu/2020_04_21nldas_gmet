@@ -6,21 +6,24 @@ set -e
   
 RootDir=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet #cheyenne
 EnsDirBase=$RootDir/test_uniform_perturb
-Template=$RootDir/scripts/config/cal_tmin_tmax.sh
+
+configFileName=cal_tmin_tmax.sh
+configFileNameShort="${configFileName/.sh/}"
+Template=$RootDir/scripts/config/$configFileName
 
 startEns=1   # start number of ensembles to generate
 stopEns=100  # stop number of ensembles to generate
 interval=5
 
-sYear=2015 
+sYear=2016 
 eYear=2016
 
 #==========================bias correction===========================
 # loop all stnlist files
 FILES=( $(ls ${EnsDirBase}) )
 FILE_NUM=${#FILES[@]}
-# for i in $(seq 1 $(($FILE_NUM -1))); do
-for i in $(seq 0 0); do
+for i in $(seq 0 $(($FILE_NUM -1))); do
+# for i in $(seq 0 0); do
     
     CaseID=${FILES[${i}]}
     EnsDir=$EnsDirBase/$CaseID/gmet_ens
@@ -34,7 +37,7 @@ for i in $(seq 0 0); do
 
             # setup configuration file
             if [ ! -d $EnsDirBase/$CaseID/tmp ]; then mkdir $EnsDirBase/$CaseID/tmp; fi
-            ConfigFile=$EnsDirBase/$CaseID/tmp/config.tmin_tmax.$Y.${startEns_i}_${stopEns_i}.sh
+            ConfigFile=$EnsDirBase/$CaseID/tmp/$configFileNameShort.$Y.${startEns_i}_${stopEns_i}.sh
 
             sed "s,ENSDIR,$EnsDir,g" $Template |\
             sed "s,YEAR,$Y,g" |\
@@ -43,8 +46,8 @@ for i in $(seq 0 0); do
             chmod 744 $ConfigFile
 
             # create job submission file
-            CommandFile=$EnsDirBase/$CaseID/tmp/qsub.tmin_tmax.$Y.${startEns_i}_${stopEns_i}
-            LogFile=$EnsDirBase/$CaseID/tmp/log.tmin_tmax.$Y.${startEns_i}_${stopEns_i}
+            CommandFile=$EnsDirBase/$CaseID/tmp/qsub.$configFileNameShort.$Y.${startEns_i}_${stopEns_i}.sh
+            LogFile=$EnsDirBase/$CaseID/tmp/log.$configFileNameShort.$Y.${startEns_i}_${stopEns_i}
             rm -f ${CommandFile} $LogFile.*
 
             echo '#!/bin/bash' > $CommandFile

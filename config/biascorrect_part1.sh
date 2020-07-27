@@ -12,7 +12,6 @@ EnsBcDir=ENSBCDIR
 TmpDir=TMPDIR
  
 startEns=STARTENS   # start number of ensembles to generate
-stopEns=STOPENS  # stop number of ensembles to generate
 numEns=100
 
 NldasFile=NLDASFILE
@@ -24,8 +23,8 @@ echo $Year
 
 EnsMeanFile=$TmpDir/ens_forc.$Year.mean.nc
 EnsBiasFile=$TmpDir/ens_forc.$Year.bias.nc
-rm -f $EnsBiasFile
-# rm -f $EnsMeanFile $EnsBiasFile
+# rm -f $EnsBiasFile
+rm -f $EnsMeanFile $EnsBiasFile
 
 # calculate ensemble mean over members (time,y,x)
 echo calculate ensmeble mean

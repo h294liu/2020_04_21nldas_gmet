@@ -6,7 +6,10 @@ set -e
   
 RootDir=/glade/u/home/hongli/scratch/2020_04_21nldas_gmet #cheyenne
 EnsDirBase=$RootDir/test_uniform_perturb
-Template=$RootDir/scripts/config/ens_summary_part2.sh
+
+configFileName=ens_summary_part2.sh
+configFileNameShort="${configFileName/.sh/}"
+Template=$RootDir/scripts/config/$configFileName
 
 EnsFolders=(gmet_ens gmet_ens_bc)
 
@@ -47,7 +50,7 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
                 echo $Y $startEns_i $stopEns_i
 
                 # setup configuration file
-                ConfigFile=$EnsDirBase/$CaseID/tmp/config.${EnsFolder}.abs_x_median.$Y.${startEns_i}_${stopEns_i}.sh
+                ConfigFile=$EnsDirBase/$CaseID/tmp/$configFileNameShort.${EnsFolder}.$Y.${startEns_i}_${stopEns_i}.sh
 
                 sed "s,ENSDIR,$EnsDir,g" $Template |\
                 sed "s,ENSSUMDIR,$EnsSumDir,g" |\
@@ -57,8 +60,8 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
                 chmod 744 $ConfigFile
 
                 # create job submission file
-                CommandFile=$EnsDirBase/$CaseID/tmp/qsub.${EnsFolder}.abs_x_median.$Y.${startEns_i}_${stopEns_i}
-                LogFile=$EnsDirBase/$CaseID/tmp/log.${EnsFolder}.abs_x_median.$Y.${startEns_i}_${stopEns_i}
+                CommandFile=$EnsDirBase/$CaseID/tmp/qsub.$configFileNameShort.${EnsFolder}.$Y.${startEns_i}_${stopEns_i}.sh
+                LogFile=$EnsDirBase/$CaseID/tmp/log.$configFileNameShort.${EnsFolder}.$Y.${startEns_i}_${stopEns_i}
                 rm -f ${CommandFile} $LogFile.*
 
                 echo '#!/bin/bash' > $CommandFile
