@@ -17,13 +17,13 @@ StndataDir=${SourceDir}/step2_prepare_stndata_${SampleMode}_perturb
 WorkDirBase=${RootDir}/test_${SampleMode}_perturb
 if [ ! -d ${WorkDirBase} ]; then mkdir -p ${WorkDirBase}; fi
 
-StartDateStn=20130101
-EndDateStn=20161231
+StartDateStn=19790101 #20130101
+EndDateStn=20191231 #20161231
 
 StartDateOut=20130101
-EndDateOut=20130131 #20161231
+EndDateOut=20130131
 
-Program=/glade/u/home/hongli/tools/GMET-1/SHARP/downscale/downscale_bc.exe 
+Program=/glade/u/home/hongli/tools/GMET-1/downscale/downscale_bc.exe 
 configFileName=config.ens_regr.part1.txt
 configFileNameShort="${configFileName/.txt/}"
 Template=/glade/u/home/hongli/github/2020_04_21nldas_gmet/config/$configFileName
@@ -72,7 +72,8 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
         
         # configure config, output and log files
 #         ConfigFile=${WorkDir}/tmp/config.$Y
-        ConfigFile=${WorkDir}/tmp/config.$Y
+        ConfigFileName=$configFileNameShort.$Y.txt
+        ConfigFile=${WorkDir}/tmp/$ConfigFileName
         OutputFile=${WorkDir}/gmet_regr/regress_ts.$Y.nc
         if [ -e ${OutputFile} ]; then rm -rf ${OutputFile}; fi
         
@@ -109,7 +110,10 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
 
         echo "module load gnu" >> ${CommandFile}
         echo "module load netcdf" >> ${CommandFile}
-        echo "${Program} ${ConfigFile}" >> ${CommandFile}
+        
+        echo "cd ${WorkDir}/tmp/" >> ${CommandFile}
+        echo "${Program} ${ConfigFileName}" >> ${CommandFile}
+#         echo "${Program} ${ConfigFile}" >> ${CommandFile}
         chmod 740 ${CommandFile}
         
         qsub ${CommandFile}

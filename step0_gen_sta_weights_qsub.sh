@@ -26,7 +26,7 @@ StartDateOut=20150101
 EndDateOut=20150331
 
 # Program=/glade/u/home/hongli/tools/GMET-1/downscale/downscale_debug.exe ##
-Program=/glade/u/home/hongli/tools/GMET-1/SHARP/downscale/downscale.exe 
+Program=/glade/u/home/hongli/tools/GMET-1/SHARP/downscale/downscale_bc.exe 
 Template=/glade/u/home/hongli/github/2020_04_21nldas_gmet/config/config.ens_regr.TEMPLATE.txt 
 GridInfo=${RootDir}/data/nldas_topo/conus_ens_grid_eighth.nc
 

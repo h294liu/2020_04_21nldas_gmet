@@ -21,8 +21,8 @@ Template=/glade/u/home/hongli/github/2020_04_21nldas_gmet/config/$configFileName
 WorkDirBase=${RootDir}/test_${SampleMode}_perturb
 if [ ! -d ${WorkDirBase} ]; then mkdir -p ${WorkDirBase}; fi
 
-StartDateOut=20130101
-EndDateOut=20161231
+StartDateOut=19790101 #20130101
+EndDateOut=20191231 #20161231
 
 # identify start and end time
 StartYr=$(echo $StartDateOut| cut -c1-4)
@@ -51,7 +51,8 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
         echo $Y        
 
         # 1. configure config, output and log files
-        ConfigFile=${WorkDir}/tmp/$configFileNameShort.$Y.sh
+        ConfigFileName=$configFileNameShort.$Y.sh
+        ConfigFile=${WorkDir}/tmp/$ConfigFileName
         if [ -e ${ConfigFile} ]; then rm -rf ${ConfigFile}; fi
 
         sed "s,WORKDIR,$WorkDir,g" $Template |\
@@ -77,10 +78,9 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
 
         echo "mkdir -p /glade/scratch/hongli/temp" >> ${CommandFile}
         echo "export TMPDIR=/glade/scratch/hongli/temp" >> ${CommandFile}
-
-        echo "module unload netcdf" >> ${CommandFile}
-        echo "module load nco" >> ${CommandFile}
-        echo "${Program} ${ConfigFile}" >> ${CommandFile}
+        
+        echo "cd ${WorkDir}/tmp/" >> ${CommandFile}
+        echo "${ConfigFileName}" >> ${CommandFile}
         chmod 740 ${CommandFile}
 
         qsub ${CommandFile}

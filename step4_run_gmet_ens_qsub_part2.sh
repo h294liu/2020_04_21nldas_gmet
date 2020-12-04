@@ -19,8 +19,8 @@ startEns=1  # start number of ensembles to generate
 stopEns=100  # stop number of ensembles to generate
 interval=5
 
-sYear=2016 
-eYear=2016
+sYear=1979 #2016 
+eYear=2019 #2016
 
 configFileName=ens_forc.part2.sh
 configFileNameShort="${configFileName/.sh/}"
@@ -30,8 +30,8 @@ GridInfo=${RootDir}/data/nldas_topo/conus_ens_grid_eighth.nc
 #------------------------------------------------------------
 FILES=( $(ls ${StnlistDir}/*.txt) )
 FILE_NUM=${#FILES[@]}
-for i in $(seq 0 $(($FILE_NUM -1))); do
-# for i in $(seq 0 0); do
+# for i in $(seq 0 $(($FILE_NUM -1))); do
+for i in $(seq $(($FILE_NUM -1)) $(($FILE_NUM -1))); do
 
     FileName=${FILES[${i}]} 
     FileName=${FileName##*/} # get basename of filename
@@ -56,7 +56,8 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
             echo $Y $startEns_i $stopEns_i
 
             # setup configuration file
-            ConfigFile=${WorkDir}/tmp/$configFileNameShort.$Y.${startEns_i}_${stopEns_i}.sh
+            ConfigFileName=$configFileNameShort.$Y.${startEns_i}_${stopEns_i}.sh
+            ConfigFile=${WorkDir}/tmp/$ConfigFileName
 
             sed "s,WORKDIR,$WorkDir,g" $Template |\
             sed "s,YR,$Y,g" |\
@@ -86,7 +87,10 @@ for i in $(seq 0 $(($FILE_NUM -1))); do
 
             echo "module load gnu" >> ${CommandFile}
             echo "module load netcdf" >> ${CommandFile}
-            echo "${ConfigFile}" >> ${CommandFile}
+        
+            echo "cd ${WorkDir}/tmp/" >> ${CommandFile}
+            echo "${ConfigFileName}" >> ${CommandFile}
+#             echo "${ConfigFile}" >> ${CommandFile}
             chmod 740 ${CommandFile}
 
             qsub ${CommandFile}

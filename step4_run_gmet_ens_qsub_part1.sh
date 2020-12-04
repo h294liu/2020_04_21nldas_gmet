@@ -18,10 +18,10 @@ if [ ! -d ${WorkDirBase} ]; then mkdir -p ${WorkDirBase}; fi
 
 startEns=1  # start number of ensembles to generate
 stopEns=100  # stop number of ensembles to generate
-sYear=2016 
-eYear=2016
+sYear=1979 #2019 
+eYear=2017
 
-Program=/glade/u/home/hongli/tools/GMET-1/SHARP/scrf/generate_ensemble_bc.exe
+Program=/glade/u/home/hongli/tools/GMET-1/scrf/generate_ensemble_bc.exe
 configFileName=ens_forc.part1.txt
 configFileNameShort="${configFileName/.txt/}"
 Template=/glade/u/home/hongli/github/2020_04_21nldas_gmet/config/$configFileName
@@ -31,7 +31,7 @@ GridInfo=${RootDir}/data/nldas_topo/conus_ens_grid_eighth.nc
 FILES=( $(ls ${StnlistDir}/*.txt) )
 FILE_NUM=${#FILES[@]}
 # for i in $(seq 0 $(($FILE_NUM -1))); do
-for i in $(seq 0 0); do
+for i in $(seq $(($FILE_NUM -1)) $(($FILE_NUM -1))); do
 
     FileName=${FILES[${i}]} 
     FileName=${FileName##*/} # get basename of filename
@@ -52,7 +52,8 @@ for i in $(seq 0 0); do
         echo $Y, $nDays
         
         # configure config, output and log files
-        ConfigFile=${WorkDir}/tmp/$configFileNameShort.$Y.txt
+        ConfigFileName=$configFileNameShort.$Y.txt
+        ConfigFile=${WorkDir}/tmp/$ConfigFileName
         InRegrFile=${WorkDir}/gmet_regr/regress_ts.$Y.nc
 
         OutEnsForcRoot=${WorkDir}/gmet_ens/ens_forc.$Y
@@ -87,7 +88,10 @@ for i in $(seq 0 0); do
 
         echo "module load gnu" >> ${CommandFile}
         echo "module load netcdf" >> ${CommandFile}
-        echo "${Program} ${ConfigFile}" >> ${CommandFile}
+        
+        echo "cd ${WorkDir}/tmp/" >> ${CommandFile}
+        echo "${Program} ${ConfigFileName}" >> ${CommandFile}
+#         echo "${Program} ${ConfigFile}" >> ${CommandFile}
         chmod 740 ${CommandFile}
         
         qsub ${CommandFile}
