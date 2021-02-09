@@ -23,7 +23,8 @@ Template=/glade/u/home/hongli/github/2020_04_21nldas_gmet/config/$configFileName
 #------------------------------------------------------------
 FILES=( $(ls ${StnlistDir}/*.txt) )
 FILE_NUM=${#FILES[@]}
-for i in $(seq 1 $(($FILE_NUM -1))); do
+# for i in $(seq 1 $(($FILE_NUM -1))); do
+for i in $(seq $(($FILE_NUM -1)) $(($FILE_NUM -1))); do
 # for i in $(seq 0 0); do
 
     FileName=${FILES[${i}]} 
