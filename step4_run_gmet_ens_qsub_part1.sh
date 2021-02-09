@@ -18,8 +18,8 @@ if [ ! -d ${WorkDirBase} ]; then mkdir -p ${WorkDirBase}; fi
 
 startEns=1  # start number of ensembles to generate
 stopEns=100  # stop number of ensembles to generate
-sYear=1979 #2019 
-eYear=2017
+sYear=2007 #1979 #2019 
+eYear=2009 #2017
 
 Program=/glade/u/home/hongli/tools/GMET-1/scrf/generate_ensemble_bc.exe
 configFileName=ens_forc.part1.txt
@@ -31,7 +31,8 @@ GridInfo=${RootDir}/data/nldas_topo/conus_ens_grid_eighth.nc
 FILES=( $(ls ${StnlistDir}/*.txt) )
 FILE_NUM=${#FILES[@]}
 # for i in $(seq 0 $(($FILE_NUM -1))); do
-for i in $(seq $(($FILE_NUM -1)) $(($FILE_NUM -1))); do
+# for i in $(seq $(($FILE_NUM -1)) $(($FILE_NUM -1))); do
+for i in $(seq 0 0); do
 
     FileName=${FILES[${i}]} 
     FileName=${FileName##*/} # get basename of filename

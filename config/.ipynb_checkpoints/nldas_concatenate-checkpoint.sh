@@ -12,4 +12,5 @@ Var=VAR
 #========================== (no need to update)===========================
 echo $CaseID
 rm -f ${NldasOutDir}/regress_ts_${Var}.nc
-ncrcat -h -O -n 10,4,1 -v $Var ${NldasInDir}/NLDAS_2007.nc ${NldasOutDir}/NLDAS_${Var}.nc
+# ncrcat -h -O -n 10,4,1 -v $Var ${NldasInDir}/NLDAS_2007.nc ${NldasOutDir}/NLDAS_${Var}.nc
+ncrcat -h -O -n 41,4,1 -v $Var ${NldasInDir}/NLDAS_1979.nc ${NldasOutDir}/NLDAS_${Var}.nc
