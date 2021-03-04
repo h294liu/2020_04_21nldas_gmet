@@ -34,8 +34,7 @@ ncks -A -h -v data_mask $gridFile $tmpFile
 # done
 
 for var in pcp pop pcp_error tmean tmean_error trange trange_error \
-pcp_2 pop_2 pcp_error_2 tmean_2 tmean_error_2 trange_2 trange_error_2 \
-ymean ystd ymin ymax ystd_all; do
+pcp_2 pop_2 pcp_error_2 tmean_2 tmean_error_2 trange_2 trange_error_2; do
     echo $var
     ncatted -h -a _FillValue,$var,o,d,1e+20 $tmpFile
     ncap2 -A -h -s "where(data_mask == 0) ${var}=${var}@_FillValue" $tmpFile $tmpFile

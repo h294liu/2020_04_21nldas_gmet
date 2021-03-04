@@ -33,8 +33,8 @@ GridInfo=${RootDir}/data/nldas_topo/conus_ens_grid_eighth.nc
 # loop all stnlist files
 FILES=( $(ls ${StnlistDir}/*.txt) )
 FILE_NUM=${#FILES[@]}
-for i in $(seq 0 $(($FILE_NUM -1))); do
-# for i in $(seq 0 0); do
+# for i in $(seq 0 $(($FILE_NUM -1))); do
+for i in $(seq $(($FILE_NUM -2)) $(($FILE_NUM -2))); do
 
     FileName=${FILES[${i}]} 
     FileName=${FileName##*/} # get basename of filename

@@ -14,15 +14,15 @@ Template=$RootDir/scripts/config/$configFileName
 
 startEns=1   # start number of ensembles to generate
 
-sYear=1979 #2016 
-eYear=2019 #2016
+sYear=2016 #1979 #2016 
+eYear=2016 #2019 #2016
 
 #==========================bias correction===========================
 # loop all stnlist files
 FILES=( $(ls ${EnsDirBase}) )
 FILE_NUM=${#FILES[@]}
 # for i in $(seq 0 $(($FILE_NUM -1))); do
-for i in $(seq $(($FILE_NUM -1)) $(($FILE_NUM -1))); do
+for i in $(seq $(($FILE_NUM -2)) $(($FILE_NUM -2))); do
     
     CaseID=${FILES[${i}]}
     echo $CaseID

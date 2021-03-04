@@ -16,15 +16,15 @@ startEns=1   # start number of ensembles to generate
 stopEns=100  # stop number of ensembles to generate
 interval=5
 
-sYear=2005 #1979 #2016 
-eYear=2006 #2019 #2016
+sYear=2016 #2005 #1979 #2016 
+eYear=2016 #2006 #2019 #2016
 
 #==========================bias correction===========================
 # loop all stnlist files
 FILES=( $(ls ${EnsDirBase}) )
 FILE_NUM=${#FILES[@]}
 # for i in $(seq 0 $(($FILE_NUM -1))); do
-for i in $(seq $(($FILE_NUM -1)) $(($FILE_NUM -1))); do
+for i in $(seq $(($FILE_NUM -2)) $(($FILE_NUM -2))); do
     
     CaseID=${FILES[${i}]}
     echo $CaseID

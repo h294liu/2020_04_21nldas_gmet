@@ -19,8 +19,8 @@ startEns=1  # start number of ensembles to generate
 stopEns=100  # stop number of ensembles to generate
 interval=5
 
-sYear=2007 #1979 
-eYear=2009 #2019
+sYear=2016 #1979 
+eYear=2016 #2019
 
 configFileName=ens_forc.part2.sh
 configFileNameShort="${configFileName/.sh/}"
@@ -32,7 +32,7 @@ FILES=( $(ls ${StnlistDir}/*.txt) )
 FILE_NUM=${#FILES[@]}
 # for i in $(seq 0 $(($FILE_NUM -1))); do
 # for i in $(seq $(($FILE_NUM -1)) $(($FILE_NUM -1))); do
-for i in $(seq 0 0); do
+for i in $(seq $(($FILE_NUM -2)) $(($FILE_NUM -2))); do
 
     FileName=${FILES[${i}]} 
     FileName=${FileName##*/} # get basename of filename

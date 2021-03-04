@@ -23,7 +23,7 @@ Pths=(5 95 25 50 75)
 FILES=( $(ls ${EnsDirBase}) )
 FILE_NUM=${#FILES[@]}
 # for i in $(seq 1 $(($FILE_NUM -1))); do
-for i in $(seq $(($FILE_NUM -1)) $(($FILE_NUM -1))); do
+for i in $(seq $(($FILE_NUM -2)) $(($FILE_NUM -2))); do
     
     CaseID=${FILES[${i}]}
     echo $CaseID

@@ -30,8 +30,10 @@ rm -f $EnsMeanFile $EnsBiasFile
 echo calculate ensmeble mean
 startEns_NUM=$(echo $startEns | awk '{printf("%03d",$1)}')
 EnsFile=$EnsDir/ens_forc.$Year.$startEns_NUM.nc
-ncea -h -n $numEns,3,1 -v pcp,t_mean,t_min,t_max $EnsFile $EnsMeanFile # -n file_number,digit_number,numeric_increment
+# ncea -h -n $numEns,3,1 -v pcp,t_mean,t_min,t_max $EnsFile $EnsMeanFile # -n file_number,digit_number,numeric_increment
+ncea -h -n $numEns,3,1 -v pcp,t_mean $EnsFile $EnsMeanFile # -n file_number,digit_number,numeric_increment
 
 # calculate delta = NLDAS - ensemble mean
 echo calculate delta
-ncflint -h --fix_rec_crd -v pcp,t_mean,t_min,t_max -w -1,1 $EnsMeanFile $NldasFile $EnsBiasFile # output is in file1 format 
+# ncflint -h --fix_rec_crd -v pcp,t_mean,t_min,t_max -w -1,1 $EnsMeanFile $NldasFile $EnsBiasFile # output is in file1 format 
+ncflint -h --fix_rec_crd -v pcp,t_mean -w -1,1 $EnsMeanFile $NldasFile $EnsBiasFile 
