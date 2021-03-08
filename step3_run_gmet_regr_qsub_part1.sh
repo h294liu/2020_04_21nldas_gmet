@@ -20,8 +20,8 @@ if [ ! -d ${WorkDirBase} ]; then mkdir -p ${WorkDirBase}; fi
 StartDateStn=19790101 #20130101
 EndDateStn=20191231 #20161231
 
-StartDateOut=20130101
-EndDateOut=20130131
+StartDateOut=20130601
+EndDateOut=20130630
 
 Program=/glade/u/home/hongli/tools/GMET-1/downscale/downscale_bc.exe 
 configFileName=config.ens_regr.part1.txt
@@ -33,8 +33,8 @@ GridInfo=${RootDir}/data/nldas_topo/conus_ens_grid_eighth.nc
 # loop all stnlist files
 FILES=( $(ls ${StnlistDir}/*.txt) )
 FILE_NUM=${#FILES[@]}
-# for i in $(seq 0 $(($FILE_NUM -1))); do
-for i in $(seq $(($FILE_NUM -2)) $(($FILE_NUM -2))); do
+for i in $(seq 0 $(($FILE_NUM -1))); do
+# for i in $(seq $(($FILE_NUM -2)) $(($FILE_NUM -2))); do
 
     FileName=${FILES[${i}]} 
     FileName=${FileName##*/} # get basename of filename

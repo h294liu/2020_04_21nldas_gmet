@@ -21,8 +21,10 @@ Template=/glade/u/home/hongli/github/2020_04_21nldas_gmet/config/$configFileName
 WorkDirBase=${RootDir}/test_${SampleMode}_perturb
 if [ ! -d ${WorkDirBase} ]; then mkdir -p ${WorkDirBase}; fi
 
-StartDateOut=19790101 #20130101
-EndDateOut=20191231 #20161231
+# StartDateOut=19790101 #20130101
+# EndDateOut=20191231 #20161231
+StartDateOut=20120101
+EndDateOut=20161231 
 
 # identify start and end time
 StartYr=$(echo $StartDateOut| cut -c1-4)
@@ -32,8 +34,8 @@ EndYr=$(echo $EndDateOut| cut -c1-4)
 # loop all stnlist files
 FILES=( $(ls ${StnlistDir}/*.txt) )
 FILE_NUM=${#FILES[@]}
-# for i in $(seq 0 $(($FILE_NUM -1))); do
-for i in $(seq $(($FILE_NUM -2)) $(($FILE_NUM -2))); do
+for i in $(seq 0 $(($FILE_NUM -1))); do
+# for i in $(seq $(($FILE_NUM -2)) $(($FILE_NUM -2))); do
 
     FileName=${FILES[${i}]} 
     FileName=${FileName##*/} # get basename of filename

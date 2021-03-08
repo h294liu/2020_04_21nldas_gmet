@@ -13,7 +13,7 @@ Template=$RootDir/scripts/config/$configFileName
 
 EnsFolders=(gmet_ens gmet_ens_bc)
 # EnsFolders=(gmet_ens_bc)
-sYear=2016 
+sYear=2012 
 eYear=2016
 cdoMetrics=(ensmean ensstd enspctl)
 Pths=(5 95 25 50 75)

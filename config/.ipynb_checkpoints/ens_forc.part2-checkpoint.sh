@@ -25,7 +25,7 @@ for M in $(seq ${startEns} ${stopEns}); do
     ncks -A -h -v data_mask $gridFile $tmpFile
     for var in pcp t_mean t_range; do
         echo $var
-        ncatted -h -a _FillValue,$var,o,d,1e+20 $tmpFile
+        ncatted -h -a _FillValue,$var,o,f,1e+20 -a missing_value,$var,o,f,1.e+20 $tmpFile
         ncap2 -A -h -s "where(data_mask == 0) ${var}=${var}@_FillValue" $tmpFile $tmpFile
     done
 

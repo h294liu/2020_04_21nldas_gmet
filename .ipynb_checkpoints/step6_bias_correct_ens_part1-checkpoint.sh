@@ -14,8 +14,8 @@ Template=$RootDir/scripts/config/$configFileName
 
 startEns=1   # start number of ensembles to generate
 
-sYear=2016 #1979 #2016 
-eYear=2016 #2019 #2016
+sYear=2012 #1979 #2016 
+eYear=2015 #2019 #2016
 
 #==========================bias correction===========================
 # loop all stnlist files

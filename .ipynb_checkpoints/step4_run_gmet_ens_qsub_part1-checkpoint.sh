@@ -18,7 +18,7 @@ if [ ! -d ${WorkDirBase} ]; then mkdir -p ${WorkDirBase}; fi
 
 startEns=1  # start number of ensembles to generate
 stopEns=100  # stop number of ensembles to generate
-sYear=2016 #1979 #2019 
+sYear=2012 #1979 #2019 
 eYear=2016 #2017
 
 Program=/glade/u/home/hongli/tools/GMET-1/scrf/generate_ensemble_bc.exe

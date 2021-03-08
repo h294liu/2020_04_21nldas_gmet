@@ -19,7 +19,7 @@ startEns=1  # start number of ensembles to generate
 stopEns=100  # stop number of ensembles to generate
 interval=5
 
-sYear=2016 #1979 
+sYear=2012 #1979 
 eYear=2016 #2019
 
 configFileName=ens_forc.part2.sh
