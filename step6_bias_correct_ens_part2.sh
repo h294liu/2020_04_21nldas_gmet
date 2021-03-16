@@ -16,8 +16,8 @@ startEns=1   # start number of ensembles to generate
 stopEns=100  # stop number of ensembles to generate
 interval=5
 
-sYear=2012 
-eYear=2016 
+sYear=1979 #2012 
+eYear=2019 #2016 
 
 #==========================bias correction===========================
 # loop all stnlist files
