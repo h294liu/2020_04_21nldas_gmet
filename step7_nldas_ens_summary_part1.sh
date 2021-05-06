@@ -13,9 +13,14 @@ Template=$RootDir/scripts/config/$configFileName
 
 EnsFolders=(gmet_ens gmet_ens_bc)
 # EnsFolders=(gmet_ens_bc)
-sYear=1979 #2012 
+# sYear=1979 #2012 
+# eYear=2019 #2016
+# cdoMetrics=(ensmean ensstd enspctl)
+# Pths=(5 95 25 50 75)
+
+sYear=1979 #1979 #2012 
 eYear=2019 #2016
-cdoMetrics=(ensmean ensstd enspctl)
+cdoMetrics=(ensstd1)
 Pths=(5 95 25 50 75)
 
 #==========================bias correction===========================
@@ -47,7 +52,7 @@ for i in $(seq $(($FILE_NUM -2)) $(($FILE_NUM -2))); do
             # loop metrics
             for Metric in ${cdoMetrics[@]}; do
 
-                if [ $Metric = ensmean ] || [ $Metric = ensstd ]; then
+                if [ $Metric = ensmean ] || [ $Metric = ensstd1 ]; then
                     echo $Metric
 
                     # (1) setup configuration file
@@ -113,7 +118,7 @@ for i in $(seq $(($FILE_NUM -2)) $(($FILE_NUM -2))); do
 
                         echo "$ConfigFile" >> $CommandFile
                         chmod 744 $CommandFile 
-                        qsub $CommandFile
+#                         qsub $CommandFile
                     done
                 fi
 
