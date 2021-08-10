@@ -26,6 +26,6 @@ for folder in regression ensemble_summary; do
     for filePath in $inputDir/$folder/*.nc; do
         filename="$(basename ${filePath})"
         echo $filename
-        ncks -4 -O -L 4 $filePath $outputDir/$folder/$filename
+        ncks -h -4 -O -L 4 $filePath $outputDir/$folder/$filename
     done
 done

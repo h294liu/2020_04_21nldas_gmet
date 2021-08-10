@@ -22,6 +22,7 @@ yr=YYYY
 for filePath in $inputDir/$folder/ens_forc.${yr}.*.nc; do
     filename="$(basename ${filePath})"
     echo $filename
-    ncks -4 -O -L 4 $filePath $outputDir/$folder/$filename
+    if [ -e $outputDir/$folder/$filename ]; then rm -rf $outputDir/$folder/$filename; fi
+    ncks -h -4 -O -L 4 $filePath $outputDir/$folder/$filename
 done
 
